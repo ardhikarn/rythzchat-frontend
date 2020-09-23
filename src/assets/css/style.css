@@ -1,0 +1,45 @@
+.toLogin {
+  font-size: 30px;
+  font-weight: bold;
+  color: #7e98df;
+}
+
+.toLogin:hover {
+  text-decoration: none;
+}
+
+.background {
+  background-color: #e5e5e5;
+}
+.item {
+  background: #ffffff;
+  box-shadow: 0px 20px 20px rgba(126, 152, 223, 0.05);
+  border-radius: 30px;
+  padding: 12px 30px;
+}
+.inputset {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #232323;
+  width: 100%;
+}
+
+.inputset:focus {
+  outline: none;
+  border-bottom: 3px solid #232323;
+  font-weight: bold;
+}
+
+.btn-block {
+  padding: 10px;
+}
+
+.blue {
+  background: #7e98df;
+  border: 1px solid #7e98df;
+}
+
+.bluetext {
+  color: #7e98df;
+}
