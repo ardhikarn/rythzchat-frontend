@@ -4,6 +4,9 @@ import Home from '../views/Home.vue'
 import Register from '@/views/auth/Register.vue'
 import Login from '@/views/auth/Login.vue'
 import ForgotPassword from '@/views/auth/ForgotPassword.vue'
+import NewPassword from '@/views/auth/NewPassword.vue'
+import SuccessActivate from '@/views/auth/SuccessActivate.vue'
+import ProfileUser from '@/views/ProfileUser.vue'
 
 Vue.use(VueRouter)
 
@@ -24,9 +27,24 @@ const routes = [
     component: Login
   },
   {
-    path: '/forgotpassword',
+    path: '/forgot-password',
     name: 'ForgotPasforgotpassword',
     component: ForgotPassword
+  },
+  {
+    path: '/new-password',
+    name: 'NewPassword',
+    component: NewPassword
+  },
+  {
+    path: '/activation-account',
+    name: 'SuccessActivate',
+    component: SuccessActivate
+  },
+  {
+    path: '/profile-user',
+    name: 'ProfileUser',
+    component: ProfileUser
   }
 ]
 

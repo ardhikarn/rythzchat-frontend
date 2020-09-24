@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Rubik', sans-serif;
+}
+
 .toLogin {
   font-size: 30px;
   font-weight: bold;
@@ -31,15 +41,51 @@
   font-weight: bold;
 }
 
-.btn-block {
-  padding: 10px;
+.btn-block.rounded-pill {
+  padding: 13px;
 }
 
-.blue {
+.blue.btn-block {
   background: #7e98df;
   border: 1px solid #7e98df;
 }
 
 .bluetext {
   color: #7e98df;
+}
+
+/* HOME */
+
+.message {
+  height: 100vh;
+  overflow: auto;
+}
+
+.non-message {
+  position: relative;
+  top: 50%;
+}
+
+.input-field {
+  display: grid;
+  grid-template-columns: 15% 85%;
+}
+
+.input-field i {
+  line-height: 55px;
+  transition: 0.5s;
+}
+
+.input-field input {
+  background: none;
+  outline: none;
+  font-weight: 600;
+}
+
+.img-border {
+  border-radius: 30px;
+}
+
+.popover-body {
+  background-color: #7e98df;
 }
