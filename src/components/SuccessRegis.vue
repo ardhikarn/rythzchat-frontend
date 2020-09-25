@@ -2,13 +2,18 @@
   <div class="background">
     <b-container class="py-5">
       <b-row class="justify-content-center">
-        <b-col xl="5" cols="9" class="item py-4 px-5" v-show="!isSuccess">
+        <b-col xl="5" cols="9" class="item py-4 px-5">
           <b-row>
             <b-col class="1 align-self-center">
               <routerLink class="toLogin" to="/login">&lt;</routerLink>
             </b-col>
             <b-col class="10">
-              <h4 class="bluetext text-center my-3">Register</h4>
+              <h4 class="bluetext text-center my-3" v-show="!isSuccess">
+                Register
+              </h4>
+              <h4 class="bluetext text-center my-3" v-show="isSuccess">
+                Register Success !
+              </h4>
               <!-- mending dibuat component utk page Register Success -->
             </b-col>
             <b-col class="1"></b-col>
@@ -17,6 +22,9 @@
           <p class="my-4" v-show="!isSuccess">Let's Create Your Account</p>
           <b-alert show variant="danger" v-show="isError" class="text-center">
             {{ error }}
+          </b-alert>
+          <b-alert show variant="success" v-show="isSuccess">
+            Check Your Email for Activation Account.
           </b-alert>
           <b-form @submit.prevent="onSubmit" v-show="!isSuccess">
             <div class="my-5">
@@ -59,16 +67,6 @@
             style="border: 1px solid #7e98df; color: #7e98df"
             >Google</b-button
           >
-        </b-col>
-        <b-col xl="5" cols="9" class="item py-4 px-5" v-show="isSuccess">
-          <b-row>
-            <b-col cols="12">
-              <h4 class="bluetext text-center my-3">Register Success !</h4>
-              <b-alert show variant="success" v-show="isSuccess">
-                Check Your Email for Activation Account.
-              </b-alert>
-            </b-col>
-          </b-row>
         </b-col>
       </b-row>
     </b-container>

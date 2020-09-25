@@ -13,14 +13,32 @@
             <b-col cols="1"></b-col>
           </b-row>
 
-          <p class="my-4">You'll get messages soon on your e-mail</p>
-          <!-- <b-alert show variant="danger" v-show="isError" class="my-2 text-center">{{ error() }}</b-alert> -->
-          <b-form @submit.prevent="onSubmit">
+          <p class="my-4" v-show="!isSuccess">
+            You'll get messages soon on your e-mail
+          </p>
+          <b-alert
+            show
+            variant="danger"
+            v-show="isError"
+            class="my-2 text-center"
+            >{{ error }}</b-alert
+          >
+          <b-alert show variant="success" v-show="isSuccess"
+            >Please check email for Reset Password</b-alert
+          >
+          <b-form @submit.prevent="onSubmit" v-show="!isSuccess">
             <div class="my-5">
               <p class="my-1 text-secondary">Email</p>
-              <input class="inputset" required type="email" v-model="form.user_email" />
+              <input
+                class="inputset"
+                required
+                type="email"
+                v-model="form.user_email"
+              />
             </div>
-            <b-button type="submit" class="blue btn-block my-4 rounded-pill">Send</b-button>
+            <b-button type="submit" class="blue btn-block my-4 rounded-pill"
+              >Send</b-button
+            >
           </b-form>
         </b-col>
       </b-row>
@@ -29,15 +47,32 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'Login',
+  name: 'ForgotPassword',
   data() {
     return {
       form: {
-        user_email: '',
-        user_password: ''
+        user_email: ''
       },
-      isError: false
+      isError: false,
+      isSuccess: false,
+      error: ''
+    }
+  },
+  methods: {
+    ...mapActions(['sendEmailPassword']),
+    onSubmit() {
+      this.sendEmailPassword(this.form)
+        .then((result) => {
+          this.isError = false
+          this.isSuccess = true
+        })
+        .catch((error) => {
+          this.isError = true
+          this.error = error.data.message
+        })
     }
   }
 }

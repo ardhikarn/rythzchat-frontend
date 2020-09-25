@@ -24,7 +24,9 @@
                 <b-col cols="3">
                   <b-icon icon="pencil" font-scale="1.1"></b-icon>
                 </b-col>
-                <b-col cols="9">Settings</b-col>
+                <b-col cols="9">
+                  <routerLink to="/profile-user"> Setting </routerLink>
+                </b-col>
               </b-row>
               <hr />
               <b-row class="text-white">
@@ -63,7 +65,7 @@
                 <b-col cols="3">
                   <b-icon icon="pencil" font-scale="1.1"></b-icon>
                 </b-col>
-                <b-col cols="9">Telegram FAQ</b-col>
+                <b-col cols="9" @click="toLogout">Sign Out</b-col>
               </b-row>
             </b-popover>
           </b-col>
@@ -75,8 +77,10 @@
             class="my-3 img-border"
             style="width: 100px"
           ></b-img>
-          <h5 class="mb-0"><strong>Ardhika RN</strong></h5>
-          <p>@ardhikarn</p>
+          <h5 class="mb-0 text-uppercase">
+            <strong>{{ user.user_name }}</strong>
+          </h5>
+          <p class="text-lowercase">@{{ user.user_name }}</p>
         </div>
         <b-row class="mt-4">
           <b-col cols="10" class="pr-0">
@@ -181,9 +185,33 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Home',
-  components: {}
+  data() {
+    return {}
+  },
+  components: {},
+  computed: {
+    ...mapGetters({ user: 'getUser' })
+  },
+  methods: {
+    ...mapActions(['logout']),
+    toLogout() {
+      this.$bvModal
+        .msgBoxConfirm('logout account?', {
+          cancelVariant: 'danger',
+          okVariant: 'success',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+        .then((value) => {
+          this.isLogout = value
+          this.isLogout ? this.logout() : console.log(value)
+        })
+    }
+  }
 }
 </script>
 
