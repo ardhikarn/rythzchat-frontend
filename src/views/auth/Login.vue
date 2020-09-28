@@ -42,7 +42,7 @@
           <b-button
             type="button"
             class="btn-block my-4 rounded-pill bg-white"
-            style=" border: 1px solid #7e98df; color: #7e98df;"
+            style="border: 1px solid #7e98df; color: #7e98df"
             >Google</b-button
           >
           <div class="text-center">
@@ -76,15 +76,25 @@ export default {
     ...mapActions(['login']),
     onSubmit() {
       this.login(this.form)
-        .then(result => {
+        .then((result) => {
           // console.log(result)
-          this.$router.push('/profile-user')
+          this.makeToast('success', 'Success', 'Login Success')
+          setTimeout(() => {
+            this.$router.push('/profile-user')
+          }, 1500)
         })
-        .catch(error => {
+        .catch((error) => {
           // console.log(error)
           this.isError = true
           this.error = error.data.message
         })
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }

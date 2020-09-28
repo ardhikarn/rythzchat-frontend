@@ -11,6 +11,9 @@ export default {
       state.user = payload
       state.token = payload.token
     },
+    setUserLogin(state, payload) {
+      state.user = payload
+    },
     delUser(state, payload) {
       state.user = {}
       state.token = null
@@ -20,15 +23,18 @@ export default {
     getUserById(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`http://127.0.0.1:3000/user/${payload}`)
-          .then(response => resolve(response.data))
+          .get(`${process.env.VUE_APP_BASE_URL}/user/id/${payload}`)
+          .then(response => {
+            context.commit('setUserLogin', response.data.data[0])
+            resolve(response.data)
+          })
           .catch(error => reject(error.response))
       })
     },
     register(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3000/user/register', payload)
+          .post(`${process.env.VUE_APP_BASE_URL}/user/register`, payload)
           .then(response => resolve(response.data))
           .catch(error => reject(error.response))
       })
@@ -36,7 +42,10 @@ export default {
     sendEmailActivation(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3000/user/send-email-activation', payload)
+          .post(
+            `${process.env.VUE_APP_BASE_URL}/user/send-email-activation`,
+            payload
+          )
           .then(response => resolve(response.data))
           .catch(error => reject(error.response))
       })
@@ -45,7 +54,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .patch(
-            `http://127.0.0.1:3000/user/activation-account?keys=${payload}`
+            `${process.env.VUE_APP_BASE_URL}/user/activation-account?keys=${payload}`
           )
           .then(response => resolve(response.data))
           .catch(error => reject(error.response))
@@ -54,9 +63,9 @@ export default {
     login(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3000/user/login', payload)
+          .post(`${process.env.VUE_APP_BASE_URL}/user/login`, payload)
           .then(response => {
-            // console.log(response.data)
+            delete response.data.data.user_password
             context.commit('setUser', response.data.data)
             localStorage.setItem('token', response.data.data.token)
             resolve(response.data)
@@ -67,7 +76,7 @@ export default {
     sendEmailPassword(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .post('http://127.0.0.1:3000/user/forgot-password', payload)
+          .post(`${process.env.VUE_APP_BASE_URL}/user/forgot-password`, payload)
           .then(response => resolve(response.data))
           .catch(error => reject(error.response))
       })
@@ -76,7 +85,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .patch(
-            `http://127.0.0.1:3000/user/change-password?keys=${payload.keys}`,
+            `${process.env.VUE_APP_BASE_URL}/user/change-password?keys=${payload.keys}`,
             payload.form
           )
           .then(response => resolve(response.data))

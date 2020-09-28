@@ -4,16 +4,35 @@
       <b-row class="justify-content-center">
         <b-col xl="6" cols="9" class="item text-center py-4 px-5">
           <h3 class="bluetext my-3">My Profile</h3>
-          <b-alert show variant="warning" v-if="user.user_phone === null || user.user_about === null" v-show="isShow">
+          <b-alert
+            show
+            variant="warning"
+            v-if="user.user_phone === null || user.user_about === null"
+            v-show="isShow"
+          >
             Complete your Profile please.
           </b-alert>
           <b-avatar size="12rem" class="mt-3">
-            <img style="width: 7rem" class="mt-4" />
+            <b-img :src="url + '/' + user.user_image" fluid></b-img>
           </b-avatar>
-          <input type="file" name="upload" id="" />
+          <div class="edit-image mt-2 mb-4">
+            <label for="files" class="btn btn-info btn-sm mb-0"
+              >Select Image</label
+            >
+            <input
+              id="files"
+              type="file"
+              ref="file"
+              @change.prevent="upFile"
+              style="display: none"
+            />
+            <small class="ml-4 btn btn-sm btn-dark" @click.prevent="save"
+              >Save</small
+            >
+          </div>
 
-          <b-row class="my-3">
-            <b-col cols="1" class="align-self-center text-center px-0">
+          <b-row class="my-4">
+            <b-col cols="2" class="align-self-center text-center px-0">
               <b-icon icon="person-fill" font-scale="1.5"></b-icon>
             </b-col>
             <b-col cols="10" class="text-left">
@@ -22,11 +41,8 @@
                 {{ user.user_name }}
               </p>
             </b-col>
-            <b-col cols="1" class="align-self-center text-center px-0">
-              <b-icon icon="pencil" font-scale="1.3" @click="editName"></b-icon>
-            </b-col>
             <b-col cols="12"><hr /></b-col>
-            <b-col cols="1" class="align-self-center text-center px-0">
+            <b-col cols="2" class="align-self-center text-center px-0">
               <b-icon icon="exclamation-circle" font-scale="1.5"></b-icon>
             </b-col>
             <b-col cols="10" class="text-left">
@@ -39,11 +55,8 @@
               </small>
               <p class="my-0 font-weight-bold" v-else>{{ user.user_about }}</p>
             </b-col>
-            <b-col cols="1" class="align-self-center text-center px-0">
-              <b-icon icon="pencil" font-scale="1.3"></b-icon>
-            </b-col>
             <b-col cols="12"><hr /></b-col>
-            <b-col cols="1" class="align-self-center text-center px-0">
+            <b-col cols="2" class="align-self-center text-center px-0">
               <b-icon icon="phone" font-scale="1.5"></b-icon>
             </b-col>
             <b-col cols="10" class="text-left">
@@ -56,14 +69,15 @@
               </small>
               <p class="my-0 font-weight-bold" v-else>{{ user.user_phone }}</p>
             </b-col>
-            <b-col cols="1" class="align-self-center text-center px-0">
-              <b-icon icon="pencil" font-scale="1.3"></b-icon>
-            </b-col>
           </b-row>
 
+          <b-button size="sm" class="mb-2" @click="modalEdit">
+            <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
+            Edit Profile
+          </b-button>
+          <hr />
           <router-link to="/">
             <b-button
-              @click="onUpdate"
               style="border: 1px solid #7e98df; background-color: #7e98df"
               class="my-4 px-5 rounded-pill"
             >
@@ -73,6 +87,31 @@
         </b-col>
       </b-row>
     </b-container>
+
+    <b-modal id="edit-profile" hide-footer centered>
+      <template v-slot:modal-title> Edit Profile</template>
+      <b-form @submit.prevent="updateProfile()">
+        <b-form-group label-cols-sm="3" label="Name" label-for="nested-name">
+          <b-form-input
+            id="nested-name"
+            v-model="form.user_name"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label-cols-sm="3" label="About" label-for="nested-about">
+          <b-form-input
+            id="nested-about"
+            v-model="form.user_about"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label-cols-sm="3" label="Phone" label-for="nested-phone">
+          <b-form-input
+            id="nested-phone"
+            v-model="form.user_phone"
+          ></b-form-input>
+        </b-form-group>
+        <b-button type="submit" class="btn btn-success"> Save </b-button>
+      </b-form>
+    </b-modal>
   </div>
 </template>
 
@@ -82,23 +121,73 @@ export default {
   name: 'ProfileUser',
   data() {
     return {
-      form: {},
+      url: process.env.VUE_APP_BASE_URL,
+      form: {
+        user_name: '',
+        user_about: '',
+        user_phone: ''
+      },
+      formImage: {},
       isShow: true
     }
   },
   created() {
-    // this.getUserByid(this.user.user_id)
+    this.getUserById(this.user.user_id)
   },
   computed: {
     ...mapGetters({ user: 'getUser' })
   },
   methods: {
-    ...mapActions([]),
-    onUpdate() {
-      console.log('clicked')
+    ...mapActions(['getUserById', 'patchImageUser', 'patchUser']),
+    modalEdit() {
+      this.from = {
+        user_name: this.user.user_name,
+        user_phone: this.user.user_phone,
+        user_about: this.user.user_about
+      }
+      this.$bvModal.show('edit-profile')
     },
-    editName() {
-      console.log(this.user)
+    updateProfile() {
+      const payload = {
+        id: this.user.user_id,
+        form: this.form
+      }
+      this.patchUser(payload)
+        .then((response) => {
+          this.getUserById(this.user.user_id)
+          this.makeToast('success', 'Success', response.message)
+          this.$bvModal.hide('edit-profile')
+        })
+        .catch((error) => {
+          this.makeToast('danger', 'Error', error.data.message)
+        })
+    },
+    upFile(event) {
+      this.formImage.user_image = event.target.files[0]
+      const data = new FormData()
+      data.append('user_image', this.formImage.user_image)
+      const payload = {
+        id: this.user.user_id,
+        form: data
+      }
+      this.patchImageUser(payload)
+        .then((response) => {
+          this.formImage = {}
+        })
+        .catch((error) => {
+          this.makeToast('danger', 'Error', error.data.message)
+        })
+    },
+    save() {
+      this.getUserById(this.user.user_id)
+      this.makeToast('success', 'Success', 'Image Updated')
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }
