@@ -1,5 +1,9 @@
 <template>
-  <b-popover placement="bottomleft" target="setting-popover" triggers="click">
+  <b-popover
+    placement="bottomleft"
+    target="setting-popover"
+    triggers="hover click"
+  >
     <b-row class="text-white" v-b-toggle.sidebar-profile>
       <b-col cols="1">
         <b-icon icon="pencil" font-scale="1.1"></b-icon>
@@ -31,7 +35,7 @@
     </b-row>
     <hr />
 
-    <b-row class="text-white" @click="$bvModal.show('invite-friend')">
+    <b-row class="text-white" @click="inviteFriend">
       <b-col cols="3">
         <b-icon icon="pencil" font-scale="1.1"></b-icon>
       </b-col>
@@ -112,6 +116,9 @@ export default {
   },
   methods: {
     ...mapActions(['logout', 'getUserByEmail', 'addFriend', 'getFriendById']),
+    inviteFriend() {
+      this.$bvModal.show('invite-friend')
+    },
     onSearch() {
       this.notFound = false
       this.found = false
@@ -145,7 +152,7 @@ export default {
       }
       this.addFriend(payload).then((response) => {
         const payloadContact = {
-          userId: this.user.user_id,
+          user_id: this.user.user_id,
           search: ''
         }
         this.getFriendById(payloadContact)

@@ -1,14 +1,14 @@
 <template>
-  <b-sidebar id="sidebar-profile" shadow backdrop width="342px">
+  <b-sidebar id="info-friend" right shadow backdrop width="342px">
     <div class="text-center mb-4">
       <b-img
         style="width: 10rem"
         fluid
         class="rounded-pill"
         thumbnail
-        :src="url + '/' + user.user_image"
+        :src="url + '/' + infoFriend.user_image"
       ></b-img>
-      <h4 class="text-lowercase">{{ user.user_name.split(' ')[0] }}</h4>
+      <h4 class="text-lowercase">{{ infoFriend.user_name.split(' ')[0] }}</h4>
     </div>
     <b-container class="side-profile">
       <b-row class="my-5">
@@ -18,7 +18,7 @@
         <b-col cols="10" class="text-left">
           <p class="my-0">Name</p>
           <p class="my-0 font-weight-bold text-uppercase">
-            {{ user.user_name }}
+            {{ infoFriend.user_name }}
           </p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
@@ -27,7 +27,7 @@
         </b-col>
         <b-col cols="10" class="text-left">
           <p class="my-0">About</p>
-          <p class="my-0 font-weight-bold">{{ user.user_about }}</p>
+          <p class="my-0 font-weight-bold">{{ infoFriend.user_about }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
@@ -35,7 +35,7 @@
         </b-col>
         <b-col cols="10" class="text-left">
           <p class="my-0">Phone</p>
-          <p class="my-0 font-weight-bold">{{ user.user_phone }}</p>
+          <p class="my-0 font-weight-bold">{{ infoFriend.user_phone }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
@@ -43,7 +43,7 @@
         </b-col>
         <b-col cols="10" class="text-left">
           <p class="my-0">Email</p>
-          <p class="my-0 font-weight-bold">{{ user.user_email }}</p>
+          <p class="my-0 font-weight-bold">{{ infoFriend.user_email }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
@@ -54,14 +54,6 @@
         </b-col>
         <b-col cols="12"><hr /></b-col>
       </b-row>
-      <div class="mb-2 text-center">
-        <routerLink to="/profile-user">
-          <b-button size="sm">
-            <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
-            Edit Profile
-          </b-button>
-        </routerLink>
-      </div>
 
       <b-row>
         <b-col cols="2" class="align-self-center text-center px-0">
@@ -76,13 +68,13 @@
     <b-modal id="bv-location" hide-footer centered size="lg">
       <template v-slot:modal-title> Location </template>
       <GmapMap
-        :center="{ lat: +user.user_lat, lng: +user.user_lng }"
+        :center="{ lat: +infoFriend.user_lat, lng: +infoFriend.user_lng }"
         :zoom="17.5"
         map-type-id="roadmap"
         style="width: 100%; height: 500px"
       >
         <GmapMarker
-          :position="{ lat: +user.user_lat, lng: +user.user_lng }"
+          :position="{ lat: +infoFriend.user_lat, lng: +infoFriend.user_lng }"
           :clickable="true"
           :draggable="true"
           icon="https://img.icons8.com/color/48/000000/map-pin.png"
@@ -93,9 +85,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
-  name: 'SideProfile',
+  name: 'InfoFriend',
   data() {
     return {
       url: process.env.VUE_APP_BASE_URL
@@ -103,11 +95,9 @@ export default {
   },
   created() {},
   computed: {
-    ...mapGetters({ user: 'getUser' })
+    ...mapGetters({ infoFriend: 'getFriendProfile' })
   },
-  methods: {
-    ...mapActions(['getUserById'])
-  }
+  methods: {}
 }
 </script>
 

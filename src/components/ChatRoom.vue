@@ -1,31 +1,30 @@
 <template>
-  <b-container class="room">
-    <div class="room-header">
-      <b-row class="room-header-row">
-        <b-col cols="1" class="rooms-pict" align-self="center">
-          <b-img fluid :src="room.pict" />
+  <b-container fluid>
+    <b-row class="p-4 bg-white">
+      <b-col cols="1" class="align-self-center text-center">
+        <b-img fluid thumbnail class="rounded-circle" :src="room.pict"></b-img>
+      </b-col>
+      <b-col cols="10" class="align-self-center">
+        <p class="mb-0">{{ room.name }}</p>
+        <small class="mb-0">{{ room.status }}</small>
+      </b-col>
+      <b-col cols="1" class="align-self-center text-center">
+        <b-icon icon="paperclip" font-scale="1.5"></b-icon>
+      </b-col>
+    </b-row>
+
+    <b-container fluid id="chat-c">
+      <b-row v-for="(value, index) in chat" :key="index">
+        <b-col cols="5" :class="value.class" v-if="value.class === 'sender'">
+          {{ value.msg }}
         </b-col>
-        <b-col cols="10" align-self="center">
-          <p class="room-name">{{ room.name }}</p>
-          <p class="room-status">{{ room.status }}</p>
-        </b-col>
-        <b-col cols="1" align-self="center">
-          <b-img fluid :src="require('../assets/img/menu.png')" />
+        <b-col cols="7" v-if="value.class === 'sender'"></b-col>
+        <b-col cols="7" v-if="value.class === 'receiver'"></b-col>
+        <b-col cols="5" v-if="value.class === 'receiver'" class="text-right">
+          <div :class="value.class">{{ value.msg }}</div>
         </b-col>
       </b-row>
-    </div>
-    <div id="chat-c">
-      <b-container>
-        <b-row v-for="(value, index) in chat" :key="index">
-          <b-col :class="value.class" v-if="value.class === 'sender'">
-            {{ value.msg }}
-          </b-col>
-          <b-col v-if="value.class === 'receiver'">
-            <div :class="value.class" class="float-right">{{ value.msg }}</div>
-          </b-col>
-        </b-row>
-      </b-container>
-    </div>
+    </b-container>
     <b-container class="input-c">
       <b-row>
         <b-col cols="11">

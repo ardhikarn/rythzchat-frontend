@@ -1,21 +1,19 @@
 <template>
   <div>
-    <b-row class="justify-content-center">
-      <b-col cols="10">
-        <h4>Rythz-Chat</h4>
-      </b-col>
-      <b-col cols="2" class="align-self-center">
-        <b-img
-          :src="require('@/assets/img/menu.png')"
-          fluid
-          style="width: 25px"
-          right
-          id="setting-popover"
-        ></b-img>
-        <Popover />
-        <SideProfile />
-      </b-col>
-    </b-row>
+    <div class="py-4 title-menu">
+      <h4 class="align-self-center">Rythz-Chat</h4>
+      <b-img
+        :src="require('@/assets/img/menu.png')"
+        fluid
+        style="width: 25px"
+        id="setting-popover"
+        class="align-self-center"
+      ></b-img>
+      <Popover />
+      <SideProfile />
+      <InfoFriend />
+    </div>
+
     <b-row class="mt-4">
       <b-col cols="10" class="pr-0">
         <div class="input-field bg-light rounded-pill px-2 py-1">
@@ -40,50 +38,6 @@
         <b-icon icon="plus" font-scale="1.5"></b-icon>
       </b-col>
 
-      <!-- SEARCH FRIEND -->
-      <b-modal id="friend-list" hide-footer centered>
-        <template v-slot:modal-title> Friend List</template>
-        <b-row>
-          <b-col cols="12">
-            <b-form-input
-              type="search"
-              v-model="search"
-              placeholder="Search Friend Name"
-              v-on:keyup.enter="onSearch"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <div v-if="friendlist.length === 0" class="mt-2">
-          <small>Oops, looks like you don't have any contact yet.</small>
-        </div>
-        <b-row
-          v-else
-          v-for="(item, index) in friendlist"
-          :key="index"
-          class="mt-2"
-        >
-          <b-col cols="3" align-self="center">
-            <b-img fluid center :src="url + '/' + item.user_image"></b-img>
-          </b-col>
-          <b-col
-            cols="6"
-            align-self="center"
-            @click="onFriend(item)"
-            v-b-toggle.sidebar-info
-            style="cursor: pointer"
-          >
-            {{ item.user_name }}
-          </b-col>
-          <b-col cols="3" class="align-self-center">
-            <b-button class="float-left">
-              <b-icon icon="chat-text" font-scale="1.1"></b-icon>
-            </b-button>
-            <b-button class="float-right" @click="onDelete(item)">
-              <b-icon icon="trash" font-scale="1.1"></b-icon>
-            </b-button>
-          </b-col>
-        </b-row>
-      </b-modal>
       <b-col cols="12" class="mt-2">
         <b-tabs
           style="font-size: 20px"
@@ -153,19 +107,68 @@
         </b-tabs>
       </b-col>
     </b-row>
+
+    <!-- SEARCH FRIEND -->
+    <b-modal id="friend-list" hide-footer centered>
+      <template v-slot:modal-title> Friend List</template>
+      <b-row>
+        <b-col cols="12">
+          <b-form-input
+            type="search"
+            v-model="search"
+            placeholder="Search Friend Name"
+            v-on:keyup.enter="onSearch"
+          ></b-form-input>
+        </b-col>
+      </b-row>
+      <b-row v-if="friendlist.length === 0" class="mt-2">
+        <b-col cols="12">
+          <small>Oops, looks like you don't have any contact yet.</small>
+        </b-col>
+      </b-row>
+      <b-row
+        v-else-if="friendlist.length > 0"
+        v-for="(item, index) in friendlist"
+        :key="index"
+        class="mt-2"
+      >
+        <b-col cols="3" align-self="center">
+          <b-img fluid center :src="url + '/' + item.user_image"></b-img>
+        </b-col>
+        <b-col
+          cols="6"
+          align-self="center"
+          @click="onFriend(item)"
+          v-b-toggle.info-friend
+          style="cursor: pointer"
+        >
+          {{ item.user_name }}
+        </b-col>
+        <b-col cols="3" class="align-self-center">
+          <b-button class="float-left" @click="onChat(item)">
+            <b-icon icon="chat-text" font-scale="1.1"></b-icon>
+          </b-button>
+          <b-button class="float-right" @click="onDelete(item)">
+            <b-icon icon="trash" font-scale="1.1"></b-icon>
+          </b-button>
+        </b-col>
+      </b-row>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import Popover from '@/components/Popover.vue'
 import SideProfile from '@/components/SideProfile.vue'
+import InfoFriend from '@/components/InfoFriend.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Menu',
   components: {
     Popover,
-    SideProfile
+    SideProfile,
+    InfoFriend
   },
   data() {
     return {
@@ -194,11 +197,11 @@ export default {
       .catch((error) => {
         alert(error)
       })
-    const payload = {
+    const payloadFriend = {
       user_id: this.user.user_id,
       search: ''
     }
-    this.getFriendById(payload)
+    this.getFriendById(payloadFriend)
   },
   computed: {
     ...mapGetters({
@@ -243,12 +246,12 @@ export default {
               user_id: this.user.user_id,
               friend_id: data.user_id
             }
-            console.log(payload)
             this.deleteFriend(payload).then((res) => {
               const payloadFriend = {
                 user_id: this.user.user_id,
                 search: this.search
               }
+              console.log(payloadFriend)
               this.getFriendById(payloadFriend)
               this.makeToast('success', 'Success', res.message)
             })
@@ -256,10 +259,12 @@ export default {
         })
     },
     onFriend(data) {
+      console.log(data)
       this.setFriendProfile(data)
       this.$bvModal.hide('friend-list')
     },
     onChat(data) {
+      console.log(data)
       const check = this.rooms.some((el) => {
         return el.user_id === data.user_id
       })

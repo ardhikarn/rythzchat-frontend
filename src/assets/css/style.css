@@ -8,6 +8,16 @@ body {
   font-family: 'Rubik', sans-serif;
 }
 
+.room-chat {
+  background-color: #fafafa;
+  padding: 0 !important;
+}
+
+.title-menu {
+  display: flex;
+  justify-content: space-between;
+}
+
 .toLogin {
   font-size: 30px;
   font-weight: bold;

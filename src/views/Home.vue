@@ -1,13 +1,13 @@
 <template>
   <b-container fluid style="height: 100vh; overflow: auto">
     <b-row class="p-0">
-      <b-col cols="3" class="px-4 py-4 message">
+      <b-col cols="3" class="message">
         <Menu />
       </b-col>
-      <b-col cols="9" class="p-4 message" v-if="!isSelected">
+      <b-col cols="9" class="message room-chat" v-if="isSelected">
         <EmptyRoom />
       </b-col>
-      <b-col cols="9" class="p-4 message" v-if="isSelected">
+      <b-col cols="9" class="message room-chat" v-if="!isSelected">
         <ChatRoom />
       </b-col>
     </b-row>
