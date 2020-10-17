@@ -15,10 +15,9 @@
           <b-avatar size="12rem" class="mt-3">
             <b-img :src="url + '/' + user.user_image" fluid></b-img>
           </b-avatar>
-          <div class="edit-image mt-2 mb-4">
-            <label for="files" class="btn btn-info btn-sm mb-0"
-              >Select Image</label
-            >
+          <div class="edit-image mt-2 mb-4 text-muted">
+            <b-icon icon="pencil" scale="0.9"></b-icon>
+            <label for="files" class="mb-0 edit-image"> Select Image</label>
             <input
               id="files"
               type="file"
@@ -26,9 +25,6 @@
               @change.prevent="upFile"
               style="display: none"
             />
-            <small class="ml-4 btn btn-sm btn-dark" @click.prevent="save"
-              >Save</small
-            >
           </div>
 
           <b-row class="my-4">
@@ -169,11 +165,12 @@ export default {
         id: this.user.user_id,
         form: data
       }
-      console.log(payload.form)
       this.patchImageUser(payload)
         .then((response) => {
+          console.log(response)
           this.formImage = {}
           this.getUserById(this.user.user_id)
+          this.makeToast('success', 'Success', 'Image Updated')
         })
         .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)

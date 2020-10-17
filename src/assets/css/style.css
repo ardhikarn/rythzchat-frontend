@@ -140,3 +140,11 @@
 .input-c button:focus {
   background: #5277db !important;
 }
+
+.edit-image {
+  cursor: pointer;
+}
+
+.edit-image:hover {
+  opacity: 0.9;
+}

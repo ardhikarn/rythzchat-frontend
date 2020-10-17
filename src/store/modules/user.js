@@ -17,7 +17,7 @@ export default {
             `${process.env.VUE_APP_BASE_URL}/user/image/${payload.id}`,
             payload.form
           )
-          .then(response => console.log(response.data))
+          .then(response => resolve(response.data))
           .catch(error => reject(error.response))
       })
     },
