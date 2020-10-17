@@ -77,10 +77,19 @@ export default {
     onSubmit() {
       this.login(this.form)
         .then((result) => {
-          // console.log(result)
-          this.makeToast('success', 'Success', 'Login Success')
+          console.log(result)
+          this.makeToast('success', 'Success', result.message)
           setTimeout(() => {
-            this.$router.push('/profile-user')
+            if (
+              result.data.user_about === null ||
+              result.data.user_about === '' ||
+              result.data.user_phone === null ||
+              result.data.user_phone === ''
+            ) {
+              this.$router.push('/profile-user')
+            } else {
+              this.$router.push('/')
+            }
           }, 1500)
         })
         .catch((error) => {

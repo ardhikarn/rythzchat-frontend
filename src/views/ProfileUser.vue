@@ -33,11 +33,11 @@
 
           <b-row class="my-4">
             <b-col cols="2" class="align-self-center text-center px-0">
-              <b-icon icon="person-fill" font-scale="1.5"></b-icon>
+              <b-icon icon="person" font-scale="1.5"></b-icon>
             </b-col>
             <b-col cols="10" class="text-left">
-              <p class="my-0">Name</p>
-              <p class="my-0 font-weight-bold text-uppercase">
+              <p class="my-0 font-weight-bold">Name</p>
+              <p class="my-0 text-uppercase">
                 {{ user.user_name }}
               </p>
             </b-col>
@@ -46,28 +46,28 @@
               <b-icon icon="exclamation-circle" font-scale="1.5"></b-icon>
             </b-col>
             <b-col cols="10" class="text-left">
-              <p class="my-0">About</p>
+              <p class="my-0 font-weight-bold">About</p>
               <small
-                class="my-0 font-weight-bold"
+                class="my-0"
                 v-if="user.user_about === '' || user.user_about === null"
               >
                 set your id
               </small>
-              <p class="my-0 font-weight-bold" v-else>{{ user.user_about }}</p>
+              <p class="my-0" v-else>{{ user.user_about }}</p>
             </b-col>
             <b-col cols="12"><hr /></b-col>
             <b-col cols="2" class="align-self-center text-center px-0">
               <b-icon icon="phone" font-scale="1.5"></b-icon>
             </b-col>
             <b-col cols="10" class="text-left">
-              <p class="my-0">Phone</p>
+              <p class="my-0 font-weight-bold">Phone</p>
               <small
-                class="my-0 font-weight-bold"
+                class="my-0"
                 v-if="user.user_phone === '' || user.user_phone === null"
               >
                 set your phone number
               </small>
-              <p class="my-0 font-weight-bold" v-else>{{ user.user_phone }}</p>
+              <p class="my-0" v-else>{{ user.user_phone }}</p>
             </b-col>
           </b-row>
 
@@ -76,14 +76,13 @@
             Edit Profile
           </b-button>
           <hr />
-          <router-link to="/">
-            <b-button
-              style="border: 1px solid #7e98df; background-color: #7e98df"
-              class="my-4 px-5 rounded-pill"
-            >
-              Save
-            </b-button>
-          </router-link>
+          <b-button
+            style="border: 1px solid #7e98df; background-color: #7e98df"
+            class="my-4 px-5 rounded-pill"
+            @click="toHome"
+          >
+            Home
+          </b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -170,9 +169,11 @@ export default {
         id: this.user.user_id,
         form: data
       }
+      console.log(payload.form)
       this.patchImageUser(payload)
         .then((response) => {
           this.formImage = {}
+          this.getUserById(this.user.user_id)
         })
         .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)
@@ -181,6 +182,18 @@ export default {
     save() {
       this.getUserById(this.user.user_id)
       this.makeToast('success', 'Success', 'Image Updated')
+    },
+    toHome() {
+      if (
+        this.user.user_about === null ||
+        this.user.user_about === '' ||
+        this.user.user_phone === null ||
+        this.user.user_about === ''
+      ) {
+        this.makeToast('danger', 'Error', 'You must complete data profile')
+      } else {
+        this.$router.push('/')
+      }
     },
     makeToast(variant, title, message) {
       this.$bvToast.toast(message, {
