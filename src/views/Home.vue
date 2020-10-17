@@ -4,10 +4,10 @@
       <b-col cols="3" class="message">
         <Menu />
       </b-col>
-      <b-col cols="9" class="message room-chat" v-if="isSelected">
+      <b-col cols="9" class="message room-chat" v-if="!isSelected">
         <EmptyRoom />
       </b-col>
-      <b-col cols="9" class="message room-chat" v-if="!isSelected">
+      <b-col cols="9" class="message room-chat" v-if="isSelected">
         <ChatRoom />
       </b-col>
     </b-row>
@@ -33,30 +33,12 @@ export default {
   created() {
     this.setSelect(false)
     this.getUserById(this.user.user_id)
-    this.$getLocation()
-      .then((coordinates) => {
-        this.coordinate = {
-          lat: coordinates.lat,
-          lng: coordinates.lng
-        }
-        const payload = {
-          id: this.user.user_id,
-          form: this.coordinate
-        }
-        this.patchMaps(payload).then((response) => {
-          console.log(response.message)
-          this.getUserById(this.user.user_id)
-        })
-      })
-      .catch((error) => {
-        alert(error)
-      })
   },
   computed: {
     ...mapGetters({ user: 'getUser', isSelected: 'getSelect' })
   },
   methods: {
-    ...mapActions(['getUserById', 'patchMaps']),
+    ...mapActions(['getUserById']),
     ...mapMutations(['setSelect'])
   }
 }

@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap');
 
-html,
-body {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Rubik', sans-serif;
+}
+
+*:focus {
+  outline: none;
 }
 
 .room-chat {
@@ -16,6 +19,11 @@ body {
 .title-menu {
   display: flex;
   justify-content: space-between;
+}
+
+.title-menu h4,
+.plus {
+  color: #7e98df;
 }
 
 .toLogin {
@@ -103,4 +111,32 @@ body {
 .bs-popover-bottom > .arrow::after,
 .bs-popover-auto[x-placement^='bottom'] > .arrow::after {
   border-bottom-color: #7e98df !important;
+}
+
+#chat-c {
+  min-height: 69vh;
+  max-height: 69vh;
+  overflow-y: auto;
+}
+
+.input-c input {
+  margin: 20px auto;
+  background-color: #fafafa;
+  border-radius: 15px;
+}
+
+.input-c button {
+  margin: 20px auto;
+  background: #7e98df;
+  border: none;
+  border-radius: 15px;
+}
+
+.input-c button:hover {
+  background: #6987da;
+}
+
+.input-c button:active,
+.input-c button:focus {
+  background: #5277db !important;
 }

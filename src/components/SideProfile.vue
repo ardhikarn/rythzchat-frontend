@@ -8,16 +8,16 @@
         thumbnail
         :src="url + '/' + user.user_image"
       ></b-img>
-      <h4 class="text-lowercase">{{ user.user_name.split(' ')[0] }}</h4>
+      <h4 class="text-lowercase">@{{ user.user_name.split(' ')[0] }}</h4>
     </div>
     <b-container class="side-profile">
-      <b-row class="my-5">
+      <b-row class="mt-5">
         <b-col cols="2" class="align-self-center text-center px-0">
           <b-icon icon="person-fill" font-scale="1.5"></b-icon>
         </b-col>
         <b-col cols="10" class="text-left">
-          <p class="my-0">Name</p>
-          <p class="my-0 font-weight-bold text-uppercase">
+          <p class="my-0 font-weight-bold">Name</p>
+          <p class="my-0 text-uppercase">
             {{ user.user_name }}
           </p>
         </b-col>
@@ -26,35 +26,48 @@
           <b-icon icon="exclamation-circle-fill" font-scale="1.5"></b-icon>
         </b-col>
         <b-col cols="10" class="text-left">
-          <p class="my-0">About</p>
-          <p class="my-0 font-weight-bold">{{ user.user_about }}</p>
+          <p class="my-0 font-weight-bold">About</p>
+          <p class="my-0">{{ user.user_about }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
           <b-icon icon="phone-fill" font-scale="1.5"></b-icon>
         </b-col>
         <b-col cols="10" class="text-left">
-          <p class="my-0">Phone</p>
-          <p class="my-0 font-weight-bold">{{ user.user_phone }}</p>
+          <p class="my-0 font-weight-bold">Phone</p>
+          <p class="my-0">{{ user.user_phone }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
           <b-icon icon="envelope-fill" font-scale="1.5"></b-icon>
         </b-col>
         <b-col cols="10" class="text-left">
-          <p class="my-0">Email</p>
-          <p class="my-0 font-weight-bold">{{ user.user_email }}</p>
+          <p class="my-0 font-weight-bold">Email</p>
+          <p class="my-0">{{ user.user_email }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
-          <b-icon icon="envelope-fill" font-scale="1.5"></b-icon>
+          <b-icon icon="geo-fill" font-scale="1.5"></b-icon>
         </b-col>
         <b-col cols="10" class="text-left">
-          <p class="my-0">Location</p>
+          <p class="my-0 font-weight-bold">Location</p>
+          <GmapMap
+            :center="coordinate"
+            :zoom="20"
+            map-type-id="terrain"
+            style="width: 100%; height: 300px"
+          >
+            <GmapMarker
+              :position="coordinate"
+              :clickable="true"
+              :draggable="true"
+              icon="https://img.icons8.com/color/48/000000/map-pin.png"
+            />
+          </GmapMap>
         </b-col>
         <b-col cols="12"><hr /></b-col>
       </b-row>
-      <div class="mb-2 text-center">
+      <div class="my-3 text-center">
         <routerLink to="/profile-user">
           <b-button size="sm">
             <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
@@ -62,33 +75,7 @@
           </b-button>
         </routerLink>
       </div>
-
-      <b-row>
-        <b-col cols="2" class="align-self-center text-center px-0">
-          <b-icon icon="envelope-fill" font-scale="1.5"></b-icon>
-        </b-col>
-        <b-col cols="10" @click="$bvModal.show('bv-location')">
-          <p>Location</p>
-        </b-col>
-      </b-row>
     </b-container>
-
-    <b-modal id="bv-location" hide-footer centered size="lg">
-      <template v-slot:modal-title> Location </template>
-      <GmapMap
-        :center="{ lat: +user.user_lat, lng: +user.user_lng }"
-        :zoom="17.5"
-        map-type-id="roadmap"
-        style="width: 100%; height: 500px"
-      >
-        <GmapMarker
-          :position="{ lat: +user.user_lat, lng: +user.user_lng }"
-          :clickable="true"
-          :draggable="true"
-          icon="https://img.icons8.com/color/48/000000/map-pin.png"
-        />
-      </GmapMap>
-    </b-modal>
   </b-sidebar>
 </template>
 
@@ -98,15 +85,49 @@ export default {
   name: 'SideProfile',
   data() {
     return {
-      url: process.env.VUE_APP_BASE_URL
+      url: process.env.VUE_APP_BASE_URL,
+      coordinate: {
+        lat: 0,
+        lng: 0
+      }
     }
   },
-  created() {},
+  created() {
+    this.$getLocation()
+      .then((coordinates) => {
+        this.coordinate = {
+          lat: coordinates.lat,
+          lng: coordinates.lng
+        }
+        // console.log(coordinates)s
+      })
+      .catch((error) => {
+        alert(error)
+      })
+    // this.$getLocation()
+    //   .then(coordinates => {
+    //     this.coordinate = {
+    //       lat: coordinates.lat,
+    //       lng: coordinates.lng
+    //     }
+    //     const payload = {
+    //       id: this.user.user_id,
+    //       form: this.coordinate
+    //     }
+    //     this.patchMaps(payload).then(response => {
+    //       console.log(response.message)
+    //       this.getUserById(this.user.user_id)
+    //     })
+    //   })
+    //   .catch(error => {
+    //     alert(error)
+    //   })
+  },
   computed: {
     ...mapGetters({ user: 'getUser' })
   },
   methods: {
-    ...mapActions(['getUserById'])
+    ...mapActions(['getUserById', 'patchMaps'])
   }
 }
 </script>

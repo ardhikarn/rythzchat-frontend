@@ -8,7 +8,7 @@
         thumbnail
         :src="url + '/' + infoFriend.user_image"
       ></b-img>
-      <h4 class="text-lowercase">{{ infoFriend.user_name.split(' ')[0] }}</h4>
+      <h4 class="text-lowercase">{{ infoFriend.user_name }}</h4>
     </div>
     <b-container class="side-profile">
       <b-row class="my-5">
@@ -47,40 +47,27 @@
         </b-col>
         <b-col cols="12"><hr /></b-col>
         <b-col cols="2" class="align-self-center text-center px-0">
-          <b-icon icon="envelope-fill" font-scale="1.5"></b-icon>
+          <b-icon icon="geo-fill" font-scale="1.5"></b-icon>
         </b-col>
         <b-col cols="10" class="text-left">
-          <p class="my-0">Location</p>
+          <p class="my-0 font-weight-bold">Location</p>
+          <GmapMap
+            :center="coordinate"
+            :zoom="15"
+            map-type-id="terrain"
+            style="width: 100%; height: 300px"
+          >
+            <GmapMarker
+              :position="coordinate"
+              :clickable="true"
+              :draggable="true"
+              icon="https://img.icons8.com/color/48/000000/map-pin.png"
+            />
+          </GmapMap>
         </b-col>
         <b-col cols="12"><hr /></b-col>
       </b-row>
-
-      <b-row>
-        <b-col cols="2" class="align-self-center text-center px-0">
-          <b-icon icon="envelope-fill" font-scale="1.5"></b-icon>
-        </b-col>
-        <b-col cols="10" @click="$bvModal.show('bv-location')">
-          <p>Location</p>
-        </b-col>
-      </b-row>
     </b-container>
-
-    <b-modal id="bv-location" hide-footer centered size="lg">
-      <template v-slot:modal-title> Location </template>
-      <GmapMap
-        :center="{ lat: +infoFriend.user_lat, lng: +infoFriend.user_lng }"
-        :zoom="17.5"
-        map-type-id="roadmap"
-        style="width: 100%; height: 500px"
-      >
-        <GmapMarker
-          :position="{ lat: +infoFriend.user_lat, lng: +infoFriend.user_lng }"
-          :clickable="true"
-          :draggable="true"
-          icon="https://img.icons8.com/color/48/000000/map-pin.png"
-        />
-      </GmapMap>
-    </b-modal>
   </b-sidebar>
 </template>
 

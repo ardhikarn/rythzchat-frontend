@@ -5,47 +5,47 @@
     triggers="hover click"
   >
     <b-row class="text-white" v-b-toggle.sidebar-profile>
-      <b-col cols="1">
-        <b-icon icon="pencil" font-scale="1.1"></b-icon>
+      <b-col cols="3">
+        <b-icon icon="gear" font-scale="1.1"></b-icon>
       </b-col>
       <b-col cols="9"> settings </b-col>
     </b-row>
     <hr class="my-2" />
     <b-row class="text-white">
       <b-col cols="3">
-        <b-icon icon="pencil" font-scale="1.1"></b-icon>
+        <b-icon icon="people" font-scale="1.1"></b-icon>
       </b-col>
       <b-col cols="9">Contacts</b-col>
     </b-row>
-    <hr />
+    <hr class="my-2" />
 
     <b-row class="text-white">
       <b-col cols="3">
-        <b-icon icon="pencil" font-scale="1.1"></b-icon>
+        <b-icon icon="telephone" font-scale="1.1"></b-icon>
       </b-col>
       <b-col cols="9">Calls</b-col>
     </b-row>
-    <hr />
+    <hr class="my-2" />
 
     <b-row class="text-white">
       <b-col cols="3">
-        <b-icon icon="pencil" font-scale="1.1"></b-icon>
+        <b-icon icon="bookmark" font-scale="1.1"></b-icon>
       </b-col>
       <b-col cols="9">Save Messages</b-col>
     </b-row>
-    <hr />
+    <hr class="my-2" />
 
     <b-row class="text-white" @click="inviteFriend">
       <b-col cols="3">
-        <b-icon icon="pencil" font-scale="1.1"></b-icon>
+        <b-icon icon="person-plus" font-scale="1.1"></b-icon>
       </b-col>
       <b-col cols="9">Invite Friends</b-col>
     </b-row>
-    <hr />
+    <hr class="my-2" />
 
     <b-row class="text-white">
       <b-col cols="3">
-        <b-icon icon="pencil" font-scale="1.1"></b-icon>
+        <b-icon icon="power" font-scale="1.1"></b-icon>
       </b-col>
       <b-col cols="9" @click="toLogout">Sign Out</b-col>
     </b-row>
@@ -65,7 +65,6 @@
         <b-col cols="12" v-if="notFound">
           <p style="color: red; font-size: 14px" class="mt-2">
             Email not found<br />
-            Make sure the right email, please !
           </p>
         </b-col>
       </b-row>

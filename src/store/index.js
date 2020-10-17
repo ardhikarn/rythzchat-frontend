@@ -4,6 +4,7 @@ import Auth from './modules/auth'
 import User from './modules/user'
 import Friend from './modules/friend'
 import Room from './modules/room'
+import Message from './modules/message'
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     Auth,
     User,
     Friend,
-    Room
+    Room,
+    Message
   },
   state: {},
   mutations: {},

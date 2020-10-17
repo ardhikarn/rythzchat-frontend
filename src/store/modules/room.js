@@ -2,13 +2,13 @@ import axios from 'axios'
 
 export default {
   state: {
-    room: {},
+    rooms: {},
     isSelected: false,
     selectedRoom: {}
   },
   mutations: {
     setRoom(state, payload) {
-      state.room = payload
+      state.rooms = payload
     },
     setSelect(state, payload) {
       state.isSelected = payload
@@ -21,7 +21,7 @@ export default {
     getRoomByUserId(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .get(`${process.env.VUE_APP_BASE_URL}/room/id/${payload}`)
+          .get(`${process.env.VUE_APP_BASE_URL}/room/${payload}`)
           .then(response => {
             context.commit('setRoom', response.data.data)
             resolve(response.data)
@@ -40,7 +40,7 @@ export default {
   },
   getters: {
     getRoom(state) {
-      return state.room
+      return state.rooms
     },
     getSelect(state) {
       return state.isSelected

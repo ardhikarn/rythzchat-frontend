@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="py-4 title-menu">
-      <h4 class="align-self-center">Rythz-Chat</h4>
+      <h4 class="align-self-center mb-0">Rythz-Chat</h4>
       <b-img
         :src="require('@/assets/img/menu.png')"
         fluid
@@ -26,16 +26,16 @@
             required
             type="text"
             placeholder="Type your message..."
-            class="border-0"
+            class="border-0 py-2"
           />
         </div>
       </b-col>
       <b-col
         cols="2"
-        class="align-self-center"
+        class="align-self-center text-center px-0 plus"
         @click="$bvModal.show('friend-list')"
       >
-        <b-icon icon="plus" font-scale="1.5"></b-icon>
+        <b-icon icon="plus" font-scale="3"></b-icon>
       </b-col>
 
       <b-col cols="12" class="mt-2">
@@ -46,6 +46,47 @@
           active-nav-item-class="font-weight-bold text-dark"
         >
           <b-tab title="All" class="px-3" active>
+            <b-row
+              class="mb-3"
+              v-for="(value, index) in rooms"
+              :key="index"
+              @click="onSelect(value)"
+            >
+              <b-col cols="3" class="px-0 text-center align-self-center">
+                <b-img
+                  :src="url + '/' + value.user_image"
+                  fluid
+                  class="img-border"
+                ></b-img>
+              </b-col>
+              <b-col cols="7">
+                <p class="mb-0 font-weight-bold">{{ value.user_name }}</p>
+                <small :class="value.class" v-if="value.isSender"
+                  >Me: {{ value.recent }}</small
+                >
+                <small :class="value.class" v-else>this is message...</small>
+              </b-col>
+              <b-col cols="2" class="px-0 text-center">
+                <small>17:17</small>
+                <!-- <b-badge v-if="value.unread > 0" pill variant="info">{{
+                  value.unread
+                }}</b-badge> -->
+                <b-badge pill variant="info">2</b-badge>
+                <b-icon
+                  icon="chat-text"
+                  font-scale="1.1"
+                  v-if="value.class === 'sent and read'"
+                ></b-icon>
+                <b-icon
+                  icon="chat-text"
+                  font-scale="1.1"
+                  v-if="value.class === 'sent'"
+                ></b-icon>
+              </b-col>
+            </b-row>
+          </b-tab>
+
+          <b-tab title="Important" class="px-3">
             <b-row class="mb-3">
               <b-col cols="3" class="px-0">
                 <b-img
@@ -61,30 +102,11 @@
               </b-col>
               <b-col cols="2" class="px-0 text-center">
                 <small>17:17</small>
-                <b-badge pill variant="info">2</b-badge>
+                <b-badge pill variant="info">8-2</b-badge>
               </b-col>
             </b-row>
           </b-tab>
 
-          <b-tab title="Important" class="px-3">
-            <b-row class="mb-3">
-              <b-col cols="3" class="px-0">
-                <b-img
-                  :src="require('@/assets/img/opinion3.jpg')"
-                  fluid
-                  class="img-border"
-                ></b-img>
-              </b-col>
-              <b-col cols="7">
-                <p class="mb-0 font-weight-bold">Ardhika</p>
-                <small>this is message</small>
-              </b-col>
-              <b-col cols="2" class="px-0 text-center">
-                <small>17:17</small>
-                <b-badge pill variant="info">2</b-badge>
-              </b-col>
-            </b-row>
-          </b-tab>
           <b-tab title="Unread" class="px-3">
             <b-row class="mb-3">
               <b-col cols="3" class="px-0">
@@ -123,7 +145,7 @@
       </b-row>
       <b-row v-if="friendlist.length === 0" class="mt-2">
         <b-col cols="12">
-          <small>Oops, looks like you don't have any contact yet.</small>
+          <small>Friend not Found</small>
         </b-col>
       </b-row>
       <b-row
@@ -179,47 +201,31 @@ export default {
   },
   created() {
     this.getUserById(this.user.user_id)
-    this.$getLocation()
-      .then((coordinates) => {
-        this.coordinate = {
-          lat: coordinates.lat,
-          lng: coordinates.lng
-        }
-        const payload = {
-          id: this.user.user_id,
-          form: this.coordinate
-        }
-        this.patchMaps(payload).then((res) => {
-          console.log(res.message)
-          this.getUserById(this.user.user_id)
-        })
-      })
-      .catch((error) => {
-        alert(error)
-      })
     const payloadFriend = {
       user_id: this.user.user_id,
       search: ''
     }
     this.getFriendById(payloadFriend)
+    this.getRoomByUserId(this.user.user_id)
   },
   computed: {
     ...mapGetters({
       user: 'getUser',
       friendlist: 'getFriendlist',
-      rooms: 'getRoom'
+      rooms: 'getRoom',
+      chat: 'getMessage'
     })
   },
   methods: {
     ...mapActions([
       'getUserById',
-      'patchMaps',
       'getFriendById',
       'deleteFriend',
       'createRoom',
-      'getRoomByUserId'
+      'getRoomByUserId',
+      'getMessageByRoomId'
     ]),
-    ...mapMutations(['setFriendProfile']),
+    ...mapMutations(['setFriendProfile', 'setSelect', 'setSelectedRoom']),
     onSearch() {
       const payload = {
         user_id: this.user.user_id,
@@ -229,16 +235,13 @@ export default {
     },
     onDelete(data) {
       this.$bvModal
-        .msgBoxConfirm(
-          `Are you sure you want to remove ${data.user_name} from your contact ?`,
-          {
-            cancelVariant: 'info',
-            okVariant: 'danger',
-            headerClass: 'p-2 border-bottom-0',
-            footerClass: 'p-2 border-top-0',
-            centered: true
-          }
-        )
+        .msgBoxConfirm(`Delete ${data.user_name} from friendlist ?`, {
+          cancelVariant: 'info',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
         .then((value) => {
           this.isDelete = value
           if (this.isDelete === true) {
@@ -264,9 +267,8 @@ export default {
       this.$bvModal.hide('friend-list')
     },
     onChat(data) {
-      console.log(data)
-      const check = this.rooms.some((el) => {
-        return el.user_id === data.user_id
+      const check = this.rooms.some((value) => {
+        return value.user_id === data.user_id
       })
       if (check) {
         this.makeToast('info', 'Info', 'Room is already exists')
@@ -275,6 +277,7 @@ export default {
           user_id: this.user.user_id,
           friend_id: data.user_id
         }
+        console.log(payload)
         this.createRoom(payload).then((res) => {
           this.makeToast('success', 'Success', res.message)
           this.getRoomByUserId(this.user.user_id)
@@ -288,6 +291,17 @@ export default {
         variant: variant,
         solid: true
       })
+    },
+    onSelect(data) {
+      this.setSelectedRoom(data)
+      const payload = {
+        room_id: data.room_id,
+        user_id: this.user.user_id
+      }
+      console.log(payload)
+      this.getMessageByRoomId(payload)
+      this.setSelect(true)
+      // this.socket.emit('joinRoom', data.room_id)
     }
   }
 }
