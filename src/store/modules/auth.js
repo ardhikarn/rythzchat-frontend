@@ -28,7 +28,10 @@ export default {
             context.commit('setUserLogin', response.data.data[0])
             resolve(response.data)
           })
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     register(context, payload) {
@@ -47,7 +50,10 @@ export default {
             payload
           )
           .then(response => resolve(response.data))
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     activationAccount(context, payload) {
@@ -57,7 +63,10 @@ export default {
             `${process.env.VUE_APP_BASE_URL}/user/activation-account?keys=${payload}`
           )
           .then(response => resolve(response.data))
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     login(context, payload) {
@@ -70,7 +79,10 @@ export default {
             localStorage.setItem('token', response.data.data.token)
             resolve(response.data)
           })
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     sendEmailPassword(context, payload) {
@@ -78,7 +90,10 @@ export default {
         axios
           .post(`${process.env.VUE_APP_BASE_URL}/user/forgot-password`, payload)
           .then(response => resolve(response.data))
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     changePassword(context, payload) {
@@ -89,7 +104,10 @@ export default {
             payload.form
           )
           .then(response => resolve(response.data))
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     logout(context) {

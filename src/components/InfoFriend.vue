@@ -51,7 +51,7 @@
         </b-col>
         <b-col cols="10" class="text-left">
           <p class="my-0 font-weight-bold">Location</p>
-          <GmapMap
+          <!-- <GmapMap
             :center="coordinate"
             :zoom="15"
             map-type-id="terrain"
@@ -63,7 +63,7 @@
               :draggable="true"
               icon="https://img.icons8.com/color/48/000000/map-pin.png"
             />
-          </GmapMap>
+          </GmapMap> -->
         </b-col>
         <b-col cols="12"><hr /></b-col>
       </b-row>

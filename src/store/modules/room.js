@@ -26,7 +26,10 @@ export default {
             context.commit('setRoom', response.data.data)
             resolve(response.data)
           })
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     },
     createRoom(context, payload) {
@@ -34,7 +37,10 @@ export default {
         axios
           .post(`${process.env.VUE_APP_BASE_URL}/room/create`, payload)
           .then(response => resolve(response.data))
-          .catch(error => reject(error.response))
+          .catch(error => {
+            console.log(error)
+            reject(error.response)
+          })
       })
     }
   },

@@ -46,11 +46,8 @@
           <p class="my-0">{{ user.user_email }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
-        <b-col cols="2" class="align-self-center text-center px-0">
-          <b-icon icon="geo-fill" font-scale="1.5"></b-icon>
-        </b-col>
-        <b-col cols="10" class="text-left">
-          <p class="my-0 font-weight-bold">Location</p>
+        <b-col cols="12" class="text-left">
+          <h5 class="mt-4 font-weight-bold text-center">Location</h5>
           <GmapMap
             :center="coordinate"
             :zoom="20"
@@ -99,29 +96,21 @@ export default {
           lat: coordinates.lat,
           lng: coordinates.lng
         }
-        // console.log(coordinates)s
+        const payload = {
+          id: this.user.user_id,
+          form: {
+            user_lat: this.coordinate.lat,
+            user_lng: this.coordinate.lng,
+            user_updated_at: new Date()
+          }
+        }
+        this.patchMaps(payload).then((response) => {
+          this.getUserById(this.user.user_id)
+        })
       })
       .catch((error) => {
-        alert(error)
+        console.log(error)
       })
-    // this.$getLocation()
-    //   .then(coordinates => {
-    //     this.coordinate = {
-    //       lat: coordinates.lat,
-    //       lng: coordinates.lng
-    //     }
-    //     const payload = {
-    //       id: this.user.user_id,
-    //       form: this.coordinate
-    //     }
-    //     this.patchMaps(payload).then(response => {
-    //       console.log(response.message)
-    //       this.getUserById(this.user.user_id)
-    //     })
-    //   })
-    //   .catch(error => {
-    //     alert(error)
-    //   })
   },
   computed: {
     ...mapGetters({ user: 'getUser' })

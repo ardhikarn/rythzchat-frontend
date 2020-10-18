@@ -203,7 +203,7 @@ export default {
     this.getUserById(this.user.user_id)
     const payloadFriend = {
       user_id: this.user.user_id,
-      search: ''
+      search: this.search
     }
     this.getFriendById(payloadFriend)
     this.getRoomByUserId(this.user.user_id)
