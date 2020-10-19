@@ -91,7 +91,7 @@ export default {
   },
   created() {
     this.$getLocation()
-      .then((coordinates) => {
+      .then(coordinates => {
         this.coordinate = {
           lat: coordinates.lat,
           lng: coordinates.lng
@@ -104,11 +104,11 @@ export default {
             user_updated_at: new Date()
           }
         }
-        this.patchMaps(payload).then((response) => {
+        this.patchMaps(payload).then(response => {
           this.getUserById(this.user.user_id)
         })
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error)
       })
   },

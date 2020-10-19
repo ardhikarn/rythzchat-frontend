@@ -4,7 +4,7 @@ export default {
   state: {
     rooms: {},
     isSelected: false,
-    selectedRoom: {}
+    selectedRoom: []
   },
   mutations: {
     setRoom(state, payload) {
@@ -52,6 +52,7 @@ export default {
       return state.isSelected
     },
     getSelectedRoom(state) {
+      console.log(state.selectedRoom)
       return state.selectedRoom
     }
   }

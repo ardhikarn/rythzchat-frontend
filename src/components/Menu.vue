@@ -242,14 +242,14 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
-        .then((value) => {
+        .then(value => {
           this.isDelete = value
           if (this.isDelete === true) {
             const payload = {
               user_id: this.user.user_id,
               friend_id: data.user_id
             }
-            this.deleteFriend(payload).then((res) => {
+            this.deleteFriend(payload).then(res => {
               const payloadFriend = {
                 user_id: this.user.user_id,
                 search: this.search
@@ -262,12 +262,12 @@ export default {
         })
     },
     onFriend(data) {
-      console.log(data)
       this.setFriendProfile(data)
       this.$bvModal.hide('friend-list')
     },
     onChat(data) {
-      const check = this.rooms.some((value) => {
+      this.setFriendProfile(data)
+      const check = this.rooms.some(value => {
         return value.user_id === data.user_id
       })
       if (check) {
@@ -278,7 +278,7 @@ export default {
           friend_id: data.user_id
         }
         console.log(payload)
-        this.createRoom(payload).then((res) => {
+        this.createRoom(payload).then(res => {
           this.makeToast('success', 'Success', res.message)
           this.getRoomByUserId(this.user.user_id)
           this.$bvModal.hide('friend-list')
@@ -293,12 +293,12 @@ export default {
       })
     },
     onSelect(data) {
+      console.log(data)
       this.setSelectedRoom(data)
       const payload = {
         room_id: data.room_id,
         user_id: this.user.user_id
       }
-      console.log(payload)
       this.getMessageByRoomId(payload)
       this.setSelect(true)
       // this.socket.emit('joinRoom', data.room_id)

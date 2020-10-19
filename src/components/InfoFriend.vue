@@ -41,29 +41,31 @@
         <b-col cols="2" class="align-self-center text-center px-0">
           <b-icon icon="envelope-fill" font-scale="1.5"></b-icon>
         </b-col>
-        <b-col cols="10" class="text-left">
+        <b-col cols="10" class="text-left" @click="tes">
           <p class="my-0">Email</p>
           <p class="my-0 font-weight-bold">{{ infoFriend.user_email }}</p>
         </b-col>
         <b-col cols="12"><hr /></b-col>
-        <b-col cols="2" class="align-self-center text-center px-0">
-          <b-icon icon="geo-fill" font-scale="1.5"></b-icon>
-        </b-col>
-        <b-col cols="10" class="text-left">
-          <p class="my-0 font-weight-bold">Location</p>
-          <!-- <GmapMap
-            :center="coordinate"
+        <b-col cols="12" class="text-left">
+          <GmapMap
+            :center="{
+              lat: Number(this.infoFriend.user_lat),
+              lng: Number(this.infoFriend.user_lng)
+            }"
             :zoom="15"
             map-type-id="terrain"
             style="width: 100%; height: 300px"
           >
             <GmapMarker
-              :position="coordinate"
+              :position="{
+                lat: Number(this.infoFriend.user_lat),
+                lng: Number(this.infoFriend.user_lng)
+              }"
               :clickable="true"
               :draggable="true"
               icon="https://img.icons8.com/color/48/000000/map-pin.png"
             />
-          </GmapMap> -->
+          </GmapMap>
         </b-col>
         <b-col cols="12"><hr /></b-col>
       </b-row>
@@ -72,7 +74,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'InfoFriend',
   data() {
@@ -82,9 +84,16 @@ export default {
   },
   created() {},
   computed: {
-    ...mapGetters({ infoFriend: 'getFriendProfile' })
+    ...mapGetters({
+      infoFriend: 'getFriendProfile'
+    })
   },
-  methods: {}
+  methods: {
+    ...mapActions(['getUserById']),
+    tes() {
+      console.log(this.infoFriend())
+    }
+  }
 }
 </script>
 

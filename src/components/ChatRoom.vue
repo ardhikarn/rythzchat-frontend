@@ -1,7 +1,11 @@
 <template>
   <b-container fluid class="">
     <b-row class="p-4 bg-white">
-      <b-col cols="1" class="align-self-center text-center">
+      <b-col
+        cols="1"
+        class="align-self-center text-center"
+        v-b-toggle.info-friend
+      >
         <b-img
           fluid
           thumbnail
@@ -74,7 +78,7 @@ export default {
       this.socket.emit('joinRoom', this.room.room_id)
     }
     this.scrollToEnd()
-    this.socket.on('chatMsg', (data) => {
+    this.socket.on('chatMsg', data => {
       this.chat.push(data)
     })
   },

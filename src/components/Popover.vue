@@ -121,28 +121,32 @@ export default {
     onSearch() {
       this.notFound = false
       this.found = false
-      this.getUserByEmail(this.search).then((response) => {
-        if (response.data.length === 0) {
-          this.notFound = true
-          this.found = false
-        } else {
-          this.found = true
-          this.notFound = false
-          const check = this.friend.some(
-            (el) => el.user_id === this.searchData.user_id
-          )
-          if (this.user.user_id === this.searchData.user_id) {
-            this.notInvited = false
-            this.isInvited = false
-          } else if (check) {
-            this.isInvited = true
-            this.notInvited = false
-          } else if (!check) {
-            this.notInvited = true
-            this.isInvited = false
+      this.getUserByEmail(this.search)
+        .then((response) => {
+          if (response.data.length === 0) {
+            this.notFound = true
+            this.found = false
+          } else {
+            this.found = true
+            this.notFound = false
+            const check = this.friend.some(
+              (el) => el.user_id === this.searchData.user_id
+            )
+            if (this.user.user_id === this.searchData.user_id) {
+              this.notInvited = false
+              this.isInvited = false
+            } else if (check) {
+              this.isInvited = true
+              this.notInvited = false
+            } else if (!check) {
+              this.notInvited = true
+              this.isInvited = false
+            }
           }
-        }
-      })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     onAdd() {
       const payload = {
