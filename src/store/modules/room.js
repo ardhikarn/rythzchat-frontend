@@ -3,6 +3,7 @@ import axios from 'axios'
 export default {
   state: {
     rooms: {},
+    groupRooms: [],
     isSelected: false,
     selectedRoom: []
   },
@@ -47,6 +48,9 @@ export default {
   getters: {
     getRoom(state) {
       return state.rooms
+    },
+    getGroupRoom(state) {
+      return state.groupRooms
     },
     getSelect(state) {
       return state.isSelected

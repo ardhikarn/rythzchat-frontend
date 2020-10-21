@@ -14,121 +14,42 @@
       <InfoFriend />
     </div>
 
-    <b-row class="mt-4">
-      <b-col cols="10" class="pr-0">
-        <div class="input-field bg-light rounded-pill px-2 py-1">
-          <b-icon
-            icon="search"
-            font-scale="0.9"
-            class="align-self-center mx-auto"
-          ></b-icon>
+    <div class="sticky-top bg-white pt-2 pb-2">
+      <!-- SEARCH CHAT -->
+      <div class="sidebar-search mb-4">
+        <div class="input-group mb-3">
+          <g-image url="icon/search.svg" width="20" class="search-icon" />
           <input
-            required
             type="text"
-            placeholder="Type your message..."
-            class="border-0 py-2"
+            class="form-control font-15 rounded-pill border-0 bg-light"
+            placeholder="Search chat"
+            v-model="search"
+            @keyup="searchHandle"
           />
-        </div>
-      </b-col>
-      <b-col
-        cols="2"
-        class="align-self-center text-center px-0 plus"
-        @click="$bvModal.show('friend-list')"
-      >
-        <b-icon icon="plus" font-scale="3"></b-icon>
-      </b-col>
-
-      <b-col cols="12" class="mt-2">
-        <b-tabs
-          style="font-size: 20px"
-          no-nav-style
-          content-class="mt-2"
-          active-nav-item-class="font-weight-bold text-dark"
-        >
-          <b-tab title="All" class="px-3" active>
-            <b-row
-              class="mb-3"
-              v-for="(value, index) in rooms"
-              :key="index"
-              @click="onSelect(value)"
+          <div class="input-group-append">
+            <button
+              class="btn no-focus"
+              type="button"
+              @click="$bvModal.show('friend-list')"
             >
-              <b-col cols="3" class="px-0 text-center align-self-center">
-                <b-img
-                  :src="url + '/' + value.user_image"
-                  fluid
-                  class="img-border"
-                ></b-img>
-              </b-col>
-              <b-col cols="7">
-                <p class="mb-0 font-weight-bold">{{ value.user_name }}</p>
-                <small :class="value.class" v-if="value.isSender"
-                  >Me: {{ value.recent }}</small
-                >
-                <small :class="value.class" v-else>this is message...</small>
-              </b-col>
-              <b-col cols="2" class="px-0 text-center">
-                <small>17:17</small>
-                <!-- <b-badge v-if="value.unread > 0" pill variant="info">{{
-                  value.unread
-                }}</b-badge> -->
-                <b-badge pill variant="info">2</b-badge>
-                <b-icon
-                  icon="chat-text"
-                  font-scale="1.1"
-                  v-if="value.class === 'sent and read'"
-                ></b-icon>
-                <b-icon
-                  icon="chat-text"
-                  font-scale="1.1"
-                  v-if="value.class === 'sent'"
-                ></b-icon>
-              </b-col>
-            </b-row>
-          </b-tab>
+              <g-image url="icon/plus.svg" />
+            </button>
+          </div>
+        </div>
+      </div>
 
-          <b-tab title="Important" class="px-3">
-            <b-row class="mb-3">
-              <b-col cols="3" class="px-0">
-                <b-img
-                  :src="require('@/assets/img/opinion3.jpg')"
-                  fluid
-                  class="img-border"
-                  sizes="10rem"
-                ></b-img>
-              </b-col>
-              <b-col cols="7">
-                <p class="mb-0 font-weight-bold">Ardhika</p>
-                <small>this is message</small>
-              </b-col>
-              <b-col cols="2" class="px-0 text-center">
-                <small>17:17</small>
-                <b-badge pill variant="info">8-2</b-badge>
-              </b-col>
-            </b-row>
-          </b-tab>
-
-          <b-tab title="Unread" class="px-3">
-            <b-row class="mb-3">
-              <b-col cols="3" class="px-0">
-                <b-img
-                  :src="require('@/assets/img/opinion3.jpg')"
-                  fluid
-                  class="img-border"
-                ></b-img>
-              </b-col>
-              <b-col cols="7">
-                <p class="mb-0 font-weight-bold">Ardhika</p>
-                <small>this is message</small>
-              </b-col>
-              <b-col cols="2" class="px-0 text-center">
-                <small>17:17</small>
-                <b-badge pill variant="info">2</b-badge>
-              </b-col>
-            </b-row>
-          </b-tab>
-        </b-tabs>
-      </b-col>
-    </b-row>
+      <!--LIST FRIEND  -->
+      <div class="message-by d-flex overflow-auto py-2 align-items-center">
+        <div v-for="(menu, i) in menus" :key="i">
+          <router-link
+            :to="{ name: menu.name }"
+            :class="[currentRouteName === menu.name ? 'btn-lb' : '']"
+            class="d-inline-block btn rounded-pill mr-2"
+            >{{ menu.name }}</router-link
+          >
+        </div>
+      </div>
+    </div>
 
     <!-- SEARCH FRIEND -->
     <b-modal id="friend-list" hide-footer centered>
@@ -196,7 +117,29 @@ export default {
     return {
       url: process.env.VUE_APP_BASE_URL,
       search: '',
-      isDelete: false
+      isDelete: false,
+      menus: [
+        {
+          name: 'Dashboard',
+          status: false
+        },
+        {
+          name: 'Private',
+          status: false
+        },
+        {
+          name: 'Group',
+          status: false
+        },
+        {
+          name: 'Friends',
+          status: false
+        },
+        {
+          name: 'Users',
+          status: false
+        }
+      ]
     }
   },
   created() {
@@ -213,8 +156,12 @@ export default {
       user: 'getUser',
       friendlist: 'getFriendlist',
       rooms: 'getRoom',
-      chat: 'getMessage'
-    })
+      chat: 'getMessage',
+      groupRooms: 'getGroupRooms'
+    }),
+    currentRouteName() {
+      return this.$route.name
+    }
   },
   methods: {
     ...mapActions([
@@ -302,6 +249,9 @@ export default {
       this.getMessageByRoomId(payload)
       this.setSelect(true)
       // this.socket.emit('joinRoom', data.room_id)
+    },
+    searchHandle() {
+      console.log('ok')
     }
   }
 }

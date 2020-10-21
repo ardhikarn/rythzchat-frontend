@@ -1,5 +1,5 @@
 <template>
-  <b-sidebar id="sidebar-profile" shadow backdrop width="342px">
+  <b-sidebar id="sidebar-profile" shadow backdrop width="455px">
     <div class="text-center mb-4">
       <b-img
         style="width: 10rem"

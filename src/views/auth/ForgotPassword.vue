@@ -1,5 +1,30 @@
 <template>
-  <div class="background">
+  <CardAuth
+    title="Forgot Password"
+    needBack
+    description="You’ll get messages soon on your e-mail "
+  >
+    <template #body>
+      <form @submit.prevent="onSubmit">
+        <div class="form-group-auth">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            v-model="form.user_email"
+            class="form-control"
+          />
+        </div>
+        <g-button
+          :isLoading="getLoading"
+          type="submit"
+          class="btn btn-lb btn-block mt-4 p-auth rounded-pill"
+          >Send</g-button
+        >
+      </form>
+    </template>
+  </CardAuth>
+  <!-- <div class="background">
     <b-container class="py-5">
       <b-row class="justify-content-center">
         <b-col xl="5" cols="9" class="item py-4 px-5" style="height: 550px">
@@ -43,36 +68,45 @@
         </b-col>
       </b-row>
     </b-container>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import CardAuth from '@/components/CardAuth'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ForgotPassword',
+  components: {
+    CardAuth
+  },
   data() {
     return {
       form: {
         user_email: ''
-      },
-      isError: false,
-      isSuccess: false,
-      error: ''
+      }
     }
+  },
+  computed: {
+    ...mapGetters(['getLoading'])
   },
   methods: {
     ...mapActions(['sendEmailPassword']),
     onSubmit() {
       this.sendEmailPassword(this.form)
-        .then((result) => {
-          this.isError = false
-          this.isSuccess = true
+        .then(result => {
+          this.makeToast('success', 'Success', result.message)
         })
-        .catch((error) => {
-          this.isError = true
-          this.error = error.data.message
+        .catch(error => {
+          this.makeToast('danger', 'Error', error.data.message)
         })
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }

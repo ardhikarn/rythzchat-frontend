@@ -135,7 +135,7 @@ export default {
   methods: {
     ...mapActions(['getUserById', 'patchImageUser', 'patchUser']),
     modalEdit() {
-      this.from = {
+      this.form = {
         user_name: this.user.user_name,
         user_phone: this.user.user_phone,
         user_about: this.user.user_about
@@ -148,12 +148,12 @@ export default {
         form: this.form
       }
       this.patchUser(payload)
-        .then((response) => {
+        .then(response => {
           this.getUserById(this.user.user_id)
           this.makeToast('success', 'Success', response.message)
           this.$bvModal.hide('edit-profile')
         })
-        .catch((error) => {
+        .catch(error => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },
@@ -166,13 +166,13 @@ export default {
         form: data
       }
       this.patchImageUser(payload)
-        .then((response) => {
+        .then(response => {
           console.log(response)
           this.formImage = {}
           this.getUserById(this.user.user_id)
           this.makeToast('success', 'Success', 'Image Updated')
         })
-        .catch((error) => {
+        .catch(error => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },
@@ -189,7 +189,7 @@ export default {
       ) {
         this.makeToast('danger', 'Error', 'You must complete data profile')
       } else {
-        this.$router.push('/')
+        this.$router.push('/home')
       }
     },
     makeToast(variant, title, message) {

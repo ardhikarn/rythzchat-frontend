@@ -3,6 +3,7 @@ import router from '../../router/index'
 
 export default {
   state: {
+    isLoading: false,
     user: {},
     token: localStorage.getItem('token') || null
   },
@@ -160,6 +161,9 @@ export default {
     },
     getUser(state) {
       return state.user
+    },
+    getLoading(state) {
+      return state.isLoading
     }
   }
 }

@@ -1,15 +1,16 @@
 <template>
-  <b-container fluid style="height: 100vh; overflow: auto">
-    <b-row class="p-0">
-      <b-col cols="3" class="message">
-        <Menu />
+  <b-container fluid>
+    <b-row>
+      <b-col lg="4" md="5" class="bg-white px-4 max-vh-100 overflow-auto">
+        <Menu :class="[isSelected ? 'mobile' : '']" />
+
+        <div class="mt-4 mb-5" :class="[isSelected ? 'mobile' : '']">
+          <router-view @change-type="handleChangeType" />
+        </div>
       </b-col>
-      <b-col cols="9" class="message room-chat" v-if="!isSelected">
-        <EmptyRoom />
-      </b-col>
-      <b-col cols="9" class="message room-chat" v-if="isSelected">
-        <ChatRoom />
-      </b-col>
+
+      <EmptyRoom v-if="!isSelected" />
+      <ChatRoom v-if="isSelected" />
     </b-row>
   </b-container>
 </template>
@@ -28,7 +29,11 @@ export default {
     Menu
   },
   data() {
-    return {}
+    return {
+      page: 1,
+      messages: [],
+      infiniteId: +new Date()
+    }
   },
   created() {
     this.setSelect(false)
@@ -39,7 +44,12 @@ export default {
   },
   methods: {
     ...mapActions(['getUserById']),
-    ...mapMutations(['setSelect'])
+    ...mapMutations(['setSelect']),
+    handleChangeType() {
+      this.page = 1
+      this.messages = []
+      this.infiniteId += 1
+    }
   }
 }
 </script>

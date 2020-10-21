@@ -1,5 +1,53 @@
 <template>
-  <div class="background">
+  <CardAuth title="Register" needBack description="Let’s create your account!">
+    <template #body>
+      <form @submit.prevent="onSubmit">
+        <div class="form-group-auth">
+          <label>Name</label>
+          <input
+            type="text"
+            v-model="form.user_name"
+            name="name"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group-auth">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            v-model="form.user_email"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group-auth">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            v-model="form.user_password"
+            class="form-control"
+          />
+        </div>
+        <g-button
+          type="submit"
+          :isLoading="getLoading"
+          class="btn-lb btn-block mt-4 p-auth rounded-pill"
+          >Register</g-button
+        >
+        <div class="log-with my-4 border-bottom text-center position-relative">
+          <span class="bg-white p-3 font-13">Register With</span>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-lb btn-block p-auth rounded-pill d-flex align-items-center justify-content-center"
+        >
+          <g-image url="icon/google.svg" class="mr-2" />Google
+        </button>
+      </form>
+    </template>
+  </CardAuth>
+  <!-- <div class="background">
     <b-container class="py-5">
       <b-row class="justify-content-center">
         <b-col xl="5" cols="9" class="item py-4 px-5" v-show="!isSuccess">
@@ -9,7 +57,6 @@
             </b-col>
             <b-col class="10">
               <h4 class="bluetext text-center my-3">Register</h4>
-              <!-- mending dibuat component utk page Register Success -->
             </b-col>
             <b-col class="1"></b-col>
           </b-row>
@@ -72,49 +119,64 @@
         </b-col>
       </b-row>
     </b-container>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import CardAuth from '@/components/CardAuth'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Login',
+  components: {
+    CardAuth
+  },
   data() {
     return {
       form: {
         user_name: '',
         user_email: '',
         user_password: ''
-      },
-      isSuccess: false,
-      isError: false,
-      error: ''
+      }
     }
   },
   created() {},
+  computed: {
+    ...mapGetters(['getLoading'])
+  },
   methods: {
     ...mapActions(['register', 'sendEmailActivation']),
     onSubmit() {
       this.register(this.form)
-        .then((result) => {
+        .then(result => {
           const activation = {
             user_email: this.form.user_email
           }
           this.sendEmailActivation(activation)
-            .then((result) => {
-              this.isError = false
-              this.isSuccess = true
+            .then(result => {
+              this.makeToast(
+                'info',
+                'Register Success',
+                'Check Your Email for Activation Account'
+              )
+              setTimeout(() => {
+                this.$router.push('/login')
+              }, 2000)
             })
-            .catch((error) => {
-              this.isError = true
-              this.error = error.data.message
+            .catch(error => {
+              this.makeToast('danger', 'Error', error.data.message)
             })
         })
-        .catch((error) => {
-          this.isError = true
-          this.error = error.data.message
+        .catch(error => {
+          this.makeToast('danger', 'Error', error.data.message)
         })
+    },
+    makeToast(variant, title, message) {
+      this.$bvToast.toast(message, {
+        title: title,
+        variant: variant,
+        solid: true
+      })
     }
   }
 }

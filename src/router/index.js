@@ -1,12 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/Home'
 import Register from '@/views/auth/Register.vue'
 import Login from '@/views/auth/Login.vue'
 import ForgotPassword from '@/views/auth/ForgotPassword.vue'
 import NewPassword from '@/views/auth/NewPassword.vue'
 import SuccessActivate from '@/views/auth/SuccessActivate.vue'
 import ProfileUser from '@/views/ProfileUser.vue'
+import Dashboard from '../views/Home/Dashboard'
+import Private from '../views/Home/PrivatePage'
+import Group from '../views/Home/GroupPage'
+import Friends from '../views/Home/FriendPage'
+import Users from '../views/Home/UserPage/index.vue'
 
 import store from '../store/index'
 
@@ -15,10 +20,54 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'Root',
+    redirect: {
+      name: 'Login'
+    }
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    redirect: {
+      name: 'Dashboard'
+    },
+    children: [
+      //
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: Dashboard
+      },
+      {
+        path: 'private',
+        name: 'Private',
+        component: Private
+      },
+      {
+        path: 'group',
+        name: 'Group',
+        component: Group
+      },
+      {
+        path: 'friends',
+        name: 'Friends',
+        component: Friends
+      },
+      {
+        path: 'users',
+        name: 'Users',
+        component: Users
+      }
+    ]
   },
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: Home,
+  //   meta: { requiresAuth: true }
+  // },
   {
     path: '/register',
     name: 'Register',
@@ -33,7 +82,7 @@ const routes = [
   },
   {
     path: '/forgot-password',
-    name: 'ForgotPasforgotpassword',
+    name: 'ForgotPassword',
     component: ForgotPassword,
     meta: { requiresVisitor: true }
   },
@@ -77,7 +126,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.requiresVisitor)) {
     if (store.getters.isLogin) {
       next({
-        path: '/profile-user'
+        path: '/'
       })
     } else {
       next()

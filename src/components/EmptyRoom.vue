@@ -1,7 +1,14 @@
 <template>
-  <div class="text-center non-message">
-    <p>Please select a chat to start messaging</p>
-  </div>
+  <b-col
+    lg="8"
+    md="7"
+    class="bg-light no-message content-message max-vh-100 min-vh-100"
+  >
+    <div class="text-center">
+      <p class="mb-1 font-weight-bold">Hallo Rythz Lover</p>
+      <p>Please select a chat to start messaging</p>
+    </div>
+  </b-col>
 </template>
 
 <script>
