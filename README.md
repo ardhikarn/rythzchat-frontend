@@ -7,7 +7,7 @@
     <a href="https://github.com/ardhikarn/rythzchat-frontend/issues">Request Feature</a>
   </p>
 
-![Image Banner](https://raw.githubusercontent.com/ardhikarn/rythzchat/master/banner_rythzchat.png)
+![Image Banner](https://raw.githubusercontent.com/ardhikarn/rythzchat-frontend/master/banner_rythzchat.png)
 
 ## About The Project
 
