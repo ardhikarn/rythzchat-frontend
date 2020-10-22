@@ -11,7 +11,7 @@
         </div>
       </div> -->
       <div>
-        <h5 class="text-danger text-center">Room Not Found!</h5>
+        <h5 class="text-danger text-center">Chat is Not Found !</h5>
       </div>
     </div>
   </div>

@@ -283,7 +283,6 @@ a {
   object-fit: cover;
   object-position: center;
   border-radius: 20px;
-  margin-right: 10px;
 }
 
 .no-image {
@@ -409,7 +408,7 @@ a {
 #chat-c {
   background-color: #f7f7f7;
   padding: 1rem;
-  min-height: 70vh;
+  min-height: 76vh;
   max-height: 70vh;
   overflow-y: auto;
 }

@@ -7,7 +7,7 @@ import ForgotPassword from '@/views/auth/ForgotPassword.vue'
 import NewPassword from '@/views/auth/NewPassword.vue'
 import SuccessActivate from '@/views/auth/SuccessActivate.vue'
 import ProfileUser from '@/views/ProfileUser.vue'
-import Dashboard from '../views/Home/Dashboard'
+import All from '../views/Home/Dashboard'
 import Private from '../views/Home/PrivatePage'
 import Group from '../views/Home/GroupPage'
 import Friends from '../views/Home/FriendPage'
@@ -31,14 +31,14 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
     redirect: {
-      name: 'Dashboard'
+      name: 'All'
     },
     children: [
       //
       {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: Dashboard
+        path: 'all',
+        name: 'All',
+        component: All
       },
       {
         path: 'private',

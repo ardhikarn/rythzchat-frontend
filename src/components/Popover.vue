@@ -11,31 +11,18 @@
       <b-col cols="9"> settings </b-col>
     </b-row>
     <hr class="my-2" />
-    <b-row class="text-white">
-      <b-col cols="3">
-        <b-icon icon="people" font-scale="1.1"></b-icon>
-      </b-col>
-      <b-col cols="9">Contacts</b-col>
-    </b-row>
+    <router-link :to="{ name: 'Friends' }">
+      <b-row class="text-white">
+        <b-col cols="3">
+          <b-icon icon="people" font-scale="1.1"></b-icon>
+        </b-col>
+        <b-col cols="9">Contacts</b-col>
+      </b-row>
+    </router-link>
+
     <hr class="my-2" />
 
-    <b-row class="text-white">
-      <b-col cols="3">
-        <b-icon icon="telephone" font-scale="1.1"></b-icon>
-      </b-col>
-      <b-col cols="9">Calls</b-col>
-    </b-row>
-    <hr class="my-2" />
-
-    <b-row class="text-white">
-      <b-col cols="3">
-        <b-icon icon="bookmark" font-scale="1.1"></b-icon>
-      </b-col>
-      <b-col cols="9">Save Messages</b-col>
-    </b-row>
-    <hr class="my-2" />
-
-    <b-row class="text-white" @click="inviteFriend">
+    <b-row class="text-white cursor-pointer" @click="inviteFriend">
       <b-col cols="3">
         <b-icon icon="person-plus" font-scale="1.1"></b-icon>
       </b-col>
@@ -43,7 +30,7 @@
     </b-row>
     <hr class="my-2" />
 
-    <b-row class="text-white">
+    <b-row class="text-white cursor-pointer">
       <b-col cols="3">
         <b-icon icon="power" font-scale="1.1"></b-icon>
       </b-col>

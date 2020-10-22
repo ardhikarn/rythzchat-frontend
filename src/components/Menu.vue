@@ -2,13 +2,11 @@
   <div>
     <div class="py-4 title-menu">
       <h4 class="align-self-center mb-0">Rythz-Chat</h4>
-      <b-img
-        :src="require('@/assets/img/menu.png')"
-        fluid
-        style="width: 25px"
+      <g-image
+        url="icon/menu.svg"
+        class="mr-2 cursor-pointer"
         id="setting-popover"
-        class="align-self-center"
-      ></b-img>
+      />
       <Popover />
       <SideProfile />
       <InfoFriend />
@@ -40,11 +38,11 @@
 
       <!--LIST FRIEND  -->
       <div class="message-by d-flex overflow-auto py-2 align-items-center">
-        <div v-for="(menu, i) in menus" :key="i">
+        <div v-for="(menu, i) in menus" :key="i" class="ml-auto">
           <router-link
             :to="{ name: menu.name }"
             :class="[currentRouteName === menu.name ? 'btn-lb' : '']"
-            class="d-inline-block btn rounded-pill mr-2"
+            class="d-inline-block btn rounded-pill mx-1"
             >{{ menu.name }}</router-link
           >
         </div>
@@ -69,11 +67,56 @@
           <small>Friend not Found</small>
         </b-col>
       </b-row>
-      <b-row
+
+      <div
         v-else-if="friendlist.length > 0"
         v-for="(item, index) in friendlist"
         :key="index"
-        class="mt-2"
+        class="my-2"
+      >
+        <div class="contact-item my-4">
+          <div class="contact-image">
+            <b-avatar
+              :src="url + '/' + item.user_image"
+              class="no-image"
+            ></b-avatar>
+          </div>
+
+          <div class="name-description">
+            <h5 class="mb-0 font-17" align-self="center">
+              {{ item.user_name }}
+            </h5>
+            <p
+              class="mb-0 font-13 text-info"
+              @click="onFriend(item)"
+              v-b-toggle.info-friend
+            >
+              Lihat Profile
+            </p>
+          </div>
+
+          <div class="align-self-center ml-auto">
+            <b-icon
+              @click="onChat(item)"
+              icon="chat-text"
+              font-scale="1.3"
+              class="mx-3 cursor-pointer"
+            ></b-icon>
+            <b-icon
+              @click="onDelete(item)"
+              icon="trash"
+              font-scale="1.3"
+              class="mx-3 cursor-pointer"
+            ></b-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- <b-row
+        v-else-if="friendlist.length > 0"
+        v-for="(item, index) in friendlist"
+        :key="index"
+        class="my-2"
       >
         <b-col cols="3" align-self="center">
           <b-img fluid center :src="url + '/' + item.user_image"></b-img>
@@ -85,7 +128,8 @@
           v-b-toggle.info-friend
           style="cursor: pointer"
         >
-          {{ item.user_name }}
+          <p>{{ item.user_name }}</p>
+          <small>Lihat Profile</small>
         </b-col>
         <b-col cols="3" class="align-self-center">
           <b-button class="float-left" @click="onChat(item)">
@@ -95,7 +139,7 @@
             <b-icon icon="trash" font-scale="1.1"></b-icon>
           </b-button>
         </b-col>
-      </b-row>
+      </b-row> -->
     </b-modal>
   </div>
 </template>
@@ -120,7 +164,7 @@ export default {
       isDelete: false,
       menus: [
         {
-          name: 'Dashboard',
+          name: 'All',
           status: false
         },
         {
@@ -189,14 +233,14 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
-        .then(value => {
+        .then((value) => {
           this.isDelete = value
           if (this.isDelete === true) {
             const payload = {
               user_id: this.user.user_id,
               friend_id: data.user_id
             }
-            this.deleteFriend(payload).then(res => {
+            this.deleteFriend(payload).then((res) => {
               const payloadFriend = {
                 user_id: this.user.user_id,
                 search: this.search
@@ -214,7 +258,7 @@ export default {
     },
     onChat(data) {
       this.setFriendProfile(data)
-      const check = this.rooms.some(value => {
+      const check = this.rooms.some((value) => {
         return value.user_id === data.user_id
       })
       if (check) {
@@ -225,7 +269,7 @@ export default {
           friend_id: data.user_id
         }
         console.log(payload)
-        this.createRoom(payload).then(res => {
+        this.createRoom(payload).then((res) => {
           this.makeToast('success', 'Success', res.message)
           this.getRoomByUserId(this.user.user_id)
           this.$bvModal.hide('friend-list')

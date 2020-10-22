@@ -19,15 +19,11 @@
               <h5 class="mb-0 font-17">
                 {{ value.user_name }}
               </h5>
-              <p class="mb-0 font-13 text-muted">
-                This is message...
-              </p>
+              <p class="mb-0 font-13 text-muted">This is message...</p>
             </div>
 
             <div class="clock-check text-right ml-auto">
-              <p class="mb-0 font-14 clock">
-                17:17
-              </p>
+              <p class="mb-0 font-14 clock">17:17</p>
               <span class="cursor-pointer text-muted">
                 <b-icon icon="bell-fill"></b-icon>
               </span>
