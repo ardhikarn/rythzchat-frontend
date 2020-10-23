@@ -64,7 +64,7 @@
         </b-col>
         <b-col cols="12"><hr /></b-col>
       </b-row>
-      <div class="my-3 text-center">
+      <div class="mb-5 text-center">
         <routerLink to="/profile-user">
           <b-button size="sm">
             <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
