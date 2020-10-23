@@ -12,7 +12,11 @@ import { required, email } from 'vee-validate/dist/rules'
 import './assets/css/style.css'
 import './GComponents.js'
 import InfiniteLoading from 'vue-infinite-loading'
+import moment from 'moment'
+import VueTimeago from 'vue-timeago'
 
+Vue.prototype.moment = moment
+Vue.use(require('vue-moment'))
 Vue.use(InfiniteLoading)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
@@ -23,6 +27,10 @@ Vue.use(VueGoogleMaps, {
   }
 })
 Vue.use(VueGeolocation)
+Vue.use(VueTimeago, {
+  name: 'Timeago', // Component name, `Timeago` by default
+  locale: 'en'
+})
 
 // VEE-VALIDATE
 extend('required', {
