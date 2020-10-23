@@ -1,19 +1,65 @@
 <template>
   <div>
-    <div class="py-4 title-menu">
-      <h4 class="align-self-center mb-0">Rythz-Chat</h4>
-      <g-image
-        url="icon/menu.svg"
-        class="mr-2 cursor-pointer"
-        id="setting-popover"
-      />
-      <Popover />
+    <div
+      class="sidebar-title mt-4 mb-4 d-flex justify-content-between align-items-center"
+    >
+      <h5 class="mb-0 color-lb">Mangga Chat</h5>
+      <div class="btn-group">
+        <b-dropdown
+          size="lg"
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+        >
+          <template #button-content>
+            <g-image url="icon/menu.svg" class="mr-2 cursor-pointer" />
+          </template>
+
+          <b-dropdown-item v-b-toggle.sidebar-profile class="mb-0 pb-0">
+            <button
+              class="dropdown-item d-flex justify-content-between px-0"
+              type="button"
+            >
+              <span>Setting</span>
+              <g-image class="ml-5" url="icon/setting.svg" /></button
+          ></b-dropdown-item>
+          <b-dropdown-item class="mb-0 pb-0"
+            ><router-link
+              :to="{ name: 'Friends' }"
+              class="dropdown-item d-flex justify-content-between px-0"
+              type="button"
+            >
+              <span>Contacts</span>
+              <g-image class="ml-5" url="icon/contact.svg" /> </router-link
+          ></b-dropdown-item>
+          <b-dropdown-item class="mb-0 pb-0"
+            ><router-link
+              :to="{ name: 'Users' }"
+              class="dropdown-item d-flex justify-content-between px-0"
+              type="button"
+            >
+              <span>Invite Friends</span>
+              <g-image class="ml-5" url="icon/invite.svg" /> </router-link
+          ></b-dropdown-item>
+
+          <b-dropdown-item class="mb-0 pb-0">
+            <button
+              @click="toLogout"
+              class="dropdown-item d-flex justify-content-between px-0"
+              type="button"
+            >
+              <span>Logout</span>
+            </button>
+          </b-dropdown-item>
+        </b-dropdown>
+      </div>
+      <ModalInvite />
       <SideProfile />
       <InfoFriend />
     </div>
 
     <div class="sticky-top bg-white pt-2 pb-2">
-      <!-- SEARCH CHAT -->
+      <!-- SEARCH CHAT AND FRIENDLIST -->
       <div class="sidebar-search mb-4">
         <div class="input-group mb-3">
           <g-image url="icon/search.svg" width="20" class="search-icon" />
@@ -36,7 +82,7 @@
         </div>
       </div>
 
-      <!--LIST FRIEND  -->
+      <!--LIST MENU  -->
       <div class="message-by d-flex overflow-auto py-2 align-items-center">
         <div v-for="(menu, i) in menus" :key="i" class="ml-auto">
           <router-link
@@ -49,7 +95,7 @@
       </div>
     </div>
 
-    <!-- SEARCH FRIEND -->
+    <!-- SEARCH FRIENDLIST AND FRIENDLIST -->
     <b-modal id="friend-list" hide-footer centered>
       <template v-slot:modal-title> Friend List</template>
       <b-row>
@@ -75,7 +121,7 @@
         class="my-2"
       >
         <div class="contact-item my-4">
-          <div class="contact-image">
+          <div class="contact-image mr-3">
             <b-avatar
               :src="url + '/' + item.user_image"
               class="no-image"
@@ -87,7 +133,7 @@
               {{ item.user_name }}
             </h5>
             <p
-              class="mb-0 font-13 text-info"
+              class="mb-0 font-13 text-info see-profile"
               @click="onFriend(item)"
               v-b-toggle.info-friend
             >
@@ -100,60 +146,32 @@
               @click="onChat(item)"
               icon="chat-text"
               font-scale="1.3"
-              class="mx-3 cursor-pointer"
+              class="mx-3 cursor-pointer icon-text"
             ></b-icon>
             <b-icon
               @click="onDelete(item)"
               icon="trash"
               font-scale="1.3"
-              class="mx-3 cursor-pointer"
+              class="mx-3 cursor-pointer icon-trash"
             ></b-icon>
           </div>
         </div>
       </div>
-
-      <!-- <b-row
-        v-else-if="friendlist.length > 0"
-        v-for="(item, index) in friendlist"
-        :key="index"
-        class="my-2"
-      >
-        <b-col cols="3" align-self="center">
-          <b-img fluid center :src="url + '/' + item.user_image"></b-img>
-        </b-col>
-        <b-col
-          cols="6"
-          align-self="center"
-          @click="onFriend(item)"
-          v-b-toggle.info-friend
-          style="cursor: pointer"
-        >
-          <p>{{ item.user_name }}</p>
-          <small>Lihat Profile</small>
-        </b-col>
-        <b-col cols="3" class="align-self-center">
-          <b-button class="float-left" @click="onChat(item)">
-            <b-icon icon="chat-text" font-scale="1.1"></b-icon>
-          </b-button>
-          <b-button class="float-right" @click="onDelete(item)">
-            <b-icon icon="trash" font-scale="1.1"></b-icon>
-          </b-button>
-        </b-col>
-      </b-row> -->
     </b-modal>
   </div>
 </template>
 
 <script>
-import Popover from '@/components/Popover.vue'
+import ModalInvite from '@/components/ModalInvite.vue'
 import SideProfile from '@/components/SideProfile.vue'
 import InfoFriend from '@/components/InfoFriend.vue'
+import io from 'socket.io-client'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Menu',
   components: {
-    Popover,
+    ModalInvite,
     SideProfile,
     InfoFriend
   },
@@ -162,6 +180,8 @@ export default {
       url: process.env.VUE_APP_BASE_URL,
       search: '',
       isDelete: false,
+      isLogout: false,
+      socket: io(process.env.VUE_APP_BASE_URL),
       menus: [
         {
           name: 'All',
@@ -195,6 +215,17 @@ export default {
     this.getFriendById(payloadFriend)
     this.getRoomByUserId(this.user.user_id)
   },
+  mounted() {
+    this.socket.on('chatMsg', data => {
+      this.pushMessage(data)
+      this.getRoomByUserId(this.user.user_id)
+    })
+    this.socket.on('notify', data => {
+      if (data.user === this.user.user_id) {
+        this.makeToast('info', data.name, data.message)
+      }
+    })
+  },
   computed: {
     ...mapGetters({
       user: 'getUser',
@@ -214,9 +245,15 @@ export default {
       'deleteFriend',
       'createRoom',
       'getRoomByUserId',
-      'getMessageByRoomId'
+      'getMessageByRoomId',
+      'logout'
     ]),
-    ...mapMutations(['setFriendProfile', 'setSelect', 'setSelectedRoom']),
+    ...mapMutations([
+      'setFriendProfile',
+      'setSelect',
+      'setSelectedRoom',
+      'pushMessage'
+    ]),
     onSearch() {
       const payload = {
         user_id: this.user.user_id,
@@ -233,14 +270,14 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
-        .then((value) => {
+        .then(value => {
           this.isDelete = value
           if (this.isDelete === true) {
             const payload = {
               user_id: this.user.user_id,
               friend_id: data.user_id
             }
-            this.deleteFriend(payload).then((res) => {
+            this.deleteFriend(payload).then(res => {
               const payloadFriend = {
                 user_id: this.user.user_id,
                 search: this.search
@@ -258,7 +295,7 @@ export default {
     },
     onChat(data) {
       this.setFriendProfile(data)
-      const check = this.rooms.some((value) => {
+      const check = this.rooms.some(value => {
         return value.user_id === data.user_id
       })
       if (check) {
@@ -269,7 +306,7 @@ export default {
           friend_id: data.user_id
         }
         console.log(payload)
-        this.createRoom(payload).then((res) => {
+        this.createRoom(payload).then(res => {
           this.makeToast('success', 'Success', res.message)
           this.getRoomByUserId(this.user.user_id)
           this.$bvModal.hide('friend-list')
@@ -283,19 +320,26 @@ export default {
         solid: true
       })
     },
-    onSelect(data) {
-      console.log(data)
-      this.setSelectedRoom(data)
-      const payload = {
-        room_id: data.room_id,
-        user_id: this.user.user_id
-      }
-      this.getMessageByRoomId(payload)
-      this.setSelect(true)
-      // this.socket.emit('joinRoom', data.room_id)
-    },
     searchHandle() {
       console.log('ok')
+    },
+    toLogout() {
+      this.$bvModal
+        .msgBoxConfirm('Are you sure want to logout?', {
+          cancelVariant: 'danger',
+          okVariant: 'success',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+        .then(value => {
+          this.isLogout = value
+          this.isLogout ? this.logout() : console.log(value)
+          // if (this.isLogout) {
+          //   this.socket.emit('offline', this.user.user_id)
+          //   this.logout(this.user.user_id)
+          // }
+        })
     }
   }
 }

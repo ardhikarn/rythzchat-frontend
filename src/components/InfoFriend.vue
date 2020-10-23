@@ -48,18 +48,15 @@
         <b-col cols="12"><hr /></b-col>
         <b-col cols="12" class="text-left">
           <GmapMap
-            :center="{
-              lat: Number(this.infoFriend.user_lat),
-              lng: Number(this.infoFriend.user_lng)
-            }"
+            :center="{ lat: +infoFriend.user_lat, lng: +infoFriend.user_lng }"
             :zoom="15"
             map-type-id="terrain"
             style="width: 100%; height: 300px"
           >
             <GmapMarker
               :position="{
-                lat: Number(this.infoFriend.user_lat),
-                lng: Number(this.infoFriend.user_lng)
+                lat: +infoFriend.user_lat,
+                lng: +infoFriend.user_lng
               }"
               :clickable="true"
               :draggable="true"

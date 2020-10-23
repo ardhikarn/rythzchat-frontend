@@ -233,7 +233,6 @@ a {
 
 .dropdown-item {
   color: white !important;
-  margin-bottom: 10px;
 }
 .dropdown-item:hover {
   background: none;
@@ -292,6 +291,12 @@ a {
   margin-right: 10px;
 }
 
+.see-profile:hover,
+.icon-trash:hover,
+.icon-text:hover {
+  opacity: 0.7;
+}
+
 .name-description {
   display: flex;
   flex-direction: column;
@@ -306,6 +311,7 @@ a {
 }
 .clock {
   color: #848484;
+  float: right;
 }
 /* END LOGIN */
 .room-chat {
@@ -445,11 +451,12 @@ a {
 
 .sender,
 .receiver {
-  font-size: 15px;
   line-height: 185.17%;
-  padding: 10px 20px;
   margin: 8px;
-  max-width: 350px;
+  max-width: 250px;
+  min-width: 250px;
+  padding: 20px 15px;
+  font-size: 14px;
 }
 
 .sender {
@@ -460,6 +467,6 @@ a {
 
 .receiver {
   border-radius: 35px 35px 10px 35px;
-  background: #ffffff;
+  background: #eeeeff;
   color: #255fff;
 }
