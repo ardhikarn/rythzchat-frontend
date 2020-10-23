@@ -3,7 +3,7 @@
     <div
       class="sidebar-title mt-4 mb-4 d-flex justify-content-between align-items-center"
     >
-      <h5 class="mb-0 color-lb">Mangga Chat</h5>
+      <h5 class="mb-0 color-lb">Rythz Chat</h5>
       <div class="btn-group">
         <b-dropdown
           size="lg"
@@ -12,7 +12,7 @@
           no-caret
         >
           <template #button-content>
-            <g-image url="icon/menu.svg" class="mr-2 cursor-pointer" />
+            <g-image url="icon/menu.svg" class="mr-0 cursor-pointer" />
           </template>
 
           <b-dropdown-item v-b-toggle.sidebar-profile class="mb-0 pb-0">
