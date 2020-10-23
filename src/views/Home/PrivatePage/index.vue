@@ -19,11 +19,30 @@
               <h5 class="mb-0 font-17">
                 {{ value.user_name }}
               </h5>
-              <p class="mb-0 font-13 text-muted">This is message...</p>
+              <!-- <p class="mb-0 font-13 text-muted">This is message...</p> -->
+              <p
+                class="read mb-0 font-13 text-muted"
+                v-if="value.recent && value.recent.user_id === user.user_id"
+              >
+                Me: {{ value.recent.message.slice(0, 25) }}...
+              </p>
+              <p
+                class="read mb-0 font-13 text-muted"
+                v-else-if="
+                  value.recent && value.recent.user_id !== user.user_id
+                "
+              >
+                {{ value.recent.message.slice(0, 25) }}...
+              </p>
             </div>
 
             <div class="clock-check text-right ml-auto">
-              <p class="mb-0 font-14 clock">17:17</p>
+              <p class="mb-0 font-15 clock" v-if="value.recent">
+                <small class="clock text-dark d-inline-block mt-1">{{
+                  filterTime(value.recent.message_created_at)
+                }}</small>
+                <!-- {{ value.recent.message_created_at.slice(0, 16) }} -->
+              </p>
               <span class="cursor-pointer text-muted">
                 <b-icon icon="bell-fill"></b-icon>
               </span>
@@ -44,25 +63,30 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   data() {
     return {
       url: process.env.VUE_APP_BASE_URL,
+      socket: io(process.env.VUE_APP_BASE_URL),
       search: '',
       isDelete: false
     }
   },
   components: {},
   mounted() {},
+  created() {
+    this.getRoomByUserId(this.user.user_id)
+  },
   computed: {
     ...mapGetters({ rooms: 'getRoom', user: 'getUser' })
   },
   methods: {
-    ...mapActions(['getMessageByRoomId']),
+    ...mapActions(['getMessageByRoomId', 'getRoomByUserId']),
     ...mapMutations(['setSelect', 'setSelectedRoom']),
     onSelect(data) {
-      console.log(data)
+      this.getRoomByUserId(this.user.user_id)
       this.setSelectedRoom(data)
       const payload = {
         room_id: data.room_id,
@@ -70,7 +94,25 @@ export default {
       }
       this.getMessageByRoomId(payload)
       this.setSelect(true)
-      // this.socket.emit('joinRoom', data.room_id)
+      if (!this.prevRoom) {
+        this.socket.emit('joinRoom', data.room_id)
+        this.prevRoom = data.room_id
+      } else {
+        this.socket.emit('changeRoom', {
+          prevRoom: this.prevRoom,
+          newRoom: data.room_id
+        })
+        this.prevRoom = data.room_id
+      }
+    },
+    filterTime(val) {
+      const date = new Date(val)
+      const minute = date.getMinutes()
+      const hours = date.getHours()
+      const result = `${hours < 10 ? '0' + hours : hours}:${
+        minute < 10 ? '0' + minute : minute
+      }`
+      return result
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <b-col lg="8" md="7" class=" bg-light p-0 right-chat max-vh-100 min-vh-100">
+  <b-col lg="8" md="7" class="bg-light p-0 right-chat max-vh-100 min-vh-100">
     <!-- HEADER ROOMCHAT -->
     <div class="card border-0 rounded-0">
       <div class="card-body d-flex justify-content-between align-items-center">
@@ -18,7 +18,7 @@
             <small class="mb-0">Online</small>
           </div>
         </div>
-        <button class="btn" v-b-toggle.sidebar-right>
+        <button class="btn" v-b-toggle.info-friend @click="onDetail()">
           <g-image url="icon/profile_menu.svg" class="img-fluid" />
         </button>
       </div>
@@ -28,10 +28,36 @@
     <div id="chat-c">
       <b-container fluid v-for="(item, index) in chat" :key="index">
         <b-row v-if="item.class === 'sender'" align-h="start">
-          <div class="sender">{{ item.message }}</div>
+          <div class="sender">
+            <span class="text-light mb-1 d-inline-block font-16">{{
+              item.message
+            }}</span>
+            <div class="clearfix"></div>
+            <timeago
+              :datetime="item.message_created_at"
+              class="font-12"
+              :auto-update="60"
+            ></timeago>
+            <small class="clock text-light d-inline-block mt-1">{{
+              filterTime(item.message_created_at)
+            }}</small>
+          </div>
         </b-row>
         <b-row v-if="item.class === 'receiver'" align-h="end">
-          <div class="receiver">{{ item.message }}</div>
+          <div class="receiver">
+            <span class=" text-dark mb-1 d-inline-block font-16">{{
+              item.message
+            }}</span>
+            <div class="clearfix"></div>
+            <timeago
+              :datetime="item.message_created_at"
+              class="font-12  text-secondary"
+              :auto-update="60"
+            ></timeago>
+            <small class="clock text-secondary d-inline-block mt-1">{{
+              filterTime(item.message_created_at)
+            }}</small>
+          </div>
         </b-row>
       </b-container>
     </div>
@@ -58,6 +84,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import io from 'socket.io-client'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
@@ -71,24 +98,22 @@ export default {
     }
   },
   mounted() {
-    if (this.room) {
-      this.socket.emit('joinRoom', this.room.room_id)
-    }
     this.scrollToEnd()
-    this.socket.on('chatMsg', data => {
-      this.chat.push(data)
-    })
+  },
+  created() {
+    this.getRoomByUserId(this.user.user_id)
   },
   computed: {
     ...mapGetters({
       room: 'getSelectedRoom',
       chat: 'getMessage',
-      user: 'getUser'
+      user: 'getUser',
+      friend: 'getFriendlist'
     })
   },
   methods: {
-    ...mapActions(['getMessageByRoomId', 'sendMessage']),
-    ...mapMutations(['setSelect']),
+    ...mapActions(['getMessageByRoomId', 'sendMessage', 'getRoomByUserId']),
+    ...mapMutations(['setSelect', 'setFriendProfile']),
     scrollToEnd() {
       const container = this.$el.querySelector('#chat-c')
       container.scrollTop = container.scrollHeight
@@ -104,18 +129,37 @@ export default {
         room_id: this.room.room_id,
         user_id: this.user.user_id
       }
-      this.getMessageByRoomId(payloadRoom)
-      this.scrollToEnd()
+      this.getMessageByRoomId(payloadRoom).then(Response => {
+        this.scrollToEnd()
+        this.getRoomByUserId(this.user.user_id)
+      })
       const addData = {
         message: this.message,
         class: 'sender',
-        room: this.room.room_id
+        message_created_at: moment().format('MMMM Do YYYY, h:mm a'),
+        room: this.room.room_id,
+        user: this.room.user_id,
+        name: this.user.user_name
       }
       this.socket.emit('roomChat', addData)
       this.message = ''
     },
+    onDetail() {
+      this.setFriendProfile(
+        this.friend.filter(value => value.user_id === this.room.user_id)[0]
+      )
+    },
     clearChat() {
       this.setSelect(false)
+    },
+    filterTime(val) {
+      const date = new Date(val)
+      const minute = date.getMinutes()
+      const hours = date.getHours()
+      const result = `${hours < 10 ? '0' + hours : hours}:${
+        minute < 10 ? '0' + minute : minute
+      }`
+      return result
     }
   }
 }
