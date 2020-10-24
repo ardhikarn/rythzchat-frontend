@@ -71,11 +71,22 @@ export default {
       url: process.env.VUE_APP_BASE_URL,
       socket: io(process.env.VUE_APP_BASE_URL),
       search: '',
-      isDelete: false
+      prevRoom: ''
     }
   },
   components: {},
-  mounted() {},
+  mounted() {
+    this.socket.on('chatMsg', (data) => {
+      this.pushMessage(data)
+      this.getRoomByUserId(this.user.user_id)
+    })
+
+    // this.socket.on('notify', (data) => {
+    //   if (data.user === this.user.user_id) {
+    //     this.makeToast('info', data.name, data.message)
+    //   }
+    // })
+  },
   created() {
     this.getRoomByUserId(this.user.user_id)
   },
@@ -84,7 +95,7 @@ export default {
   },
   methods: {
     ...mapActions(['getMessageByRoomId', 'getRoomByUserId']),
-    ...mapMutations(['setSelect', 'setSelectedRoom']),
+    ...mapMutations(['setSelect', 'setSelectedRoom', 'pushMessage']),
     onSelect(data) {
       this.getRoomByUserId(this.user.user_id)
       this.setSelectedRoom(data)
@@ -92,8 +103,8 @@ export default {
         room_id: data.room_id,
         user_id: this.user.user_id
       }
-      this.getMessageByRoomId(payload)
       this.setSelect(true)
+      this.getMessageByRoomId(payload)
       if (!this.prevRoom) {
         this.socket.emit('joinRoom', data.room_id)
         this.prevRoom = data.room_id

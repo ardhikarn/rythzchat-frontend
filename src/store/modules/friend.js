@@ -24,10 +24,7 @@ export default {
             context.commit('setFriend', response.data.data)
             resolve(response.data)
           })
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .catch(error => reject(error.response))
       })
     },
     addFriend(context, payload) {
@@ -35,10 +32,7 @@ export default {
         axios
           .post(`${process.env.VUE_APP_BASE_URL}/friend/add`, payload)
           .then(response => resolve(response.data))
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .catch(error => reject(error.response))
       })
     },
     deleteFriend(context, payload) {
@@ -47,14 +41,8 @@ export default {
           .delete(
             `${process.env.VUE_APP_BASE_URL}/friend/delete?user_id=${payload.user_id}&friend_id=${payload.friend_id}`
           )
-          .then(response => {
-            console.log(response.data)
-            resolve(response.data)
-          })
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .then(response => resolve(response.data))
+          .catch(error => reject(error.response))
       })
     }
   },

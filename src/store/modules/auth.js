@@ -29,10 +29,7 @@ export default {
             context.commit('setUserLogin', response.data.data[0])
             resolve(response.data)
           })
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .catch(error => reject(error.response))
       })
     },
     register(context, payload) {
@@ -81,7 +78,6 @@ export default {
             resolve(response.data)
           })
           .catch(error => {
-            console.log(error)
             reject(error.response)
           })
       })
@@ -111,11 +107,21 @@ export default {
           })
       })
     },
-    logout(context) {
-      localStorage.removeItem('token')
-      sessionStorage.clear()
-      context.commit('delUser')
-      router.push('/login')
+    logout(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .patch(`${process.env.VUE_APP_BASE_URL}/user/activity/${payload}`)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error.response)
+          })
+        localStorage.removeItem('token')
+        sessionStorage.clear()
+        context.commit('delUser')
+        router.push('/login')
+      })
     },
     interceptorRequest(context) {
       axios.interceptors.request.use(

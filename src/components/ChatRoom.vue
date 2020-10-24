@@ -33,30 +33,36 @@
               item.message
             }}</span>
             <div class="clearfix"></div>
-            <timeago
-              :datetime="item.message_created_at"
-              class="font-12"
-              :auto-update="60"
-            ></timeago>
-            <small class="clock text-light d-inline-block mt-1">{{
-              filterTime(item.message_created_at)
-            }}</small>
+            <div v-if="item.class === 'sender'">
+              <timeago
+                :datetime="item.message_created_at"
+                class="font-12 text-light"
+                :auto-update="60"
+              ></timeago>
+              <small class="clock text-light d-inline-block mt-1">{{
+                filterTime(item.message_created_at)
+              }}</small>
+            </div>
           </div>
         </b-row>
+
         <b-row v-if="item.class === 'receiver'" align-h="end">
           <div class="receiver">
-            <span class=" text-dark mb-1 d-inline-block font-16">{{
+            <span class="text-dark mb-1 d-inline-block font-16">{{
               item.message
             }}</span>
             <div class="clearfix"></div>
-            <timeago
-              :datetime="item.message_created_at"
-              class="font-12  text-secondary"
-              :auto-update="60"
-            ></timeago>
-            <small class="clock text-secondary d-inline-block mt-1">{{
-              filterTime(item.message_created_at)
-            }}</small>
+
+            <div v-if="item.class === 'receiver'">
+              <timeago
+                :datetime="item.message_created_at"
+                class="font-12 text-secondary"
+                :auto-update="60"
+              ></timeago>
+              <small class="clock text-secondary d-inline-block mt-1">{{
+                filterTime(item.message_created_at)
+              }}</small>
+            </div>
           </div>
         </b-row>
       </b-container>
@@ -84,7 +90,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 import io from 'socket.io-client'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
@@ -129,24 +135,24 @@ export default {
         room_id: this.room.room_id,
         user_id: this.user.user_id
       }
-      this.getMessageByRoomId(payloadRoom).then(Response => {
+      this.getMessageByRoomId(payloadRoom).then((Response) => {
         this.scrollToEnd()
         this.getRoomByUserId(this.user.user_id)
       })
       const addData = {
         message: this.message,
         class: 'sender',
-        message_created_at: moment().format('MMMM Do YYYY, h:mm a'),
+        message_created_at: new Date(),
         room: this.room.room_id,
         user: this.room.user_id,
         name: this.user.user_name
       }
-      this.socket.emit('roomChat', addData)
+      this.socket.emit('roomMsg', addData)
       this.message = ''
     },
     onDetail() {
       this.setFriendProfile(
-        this.friend.filter(value => value.user_id === this.room.user_id)[0]
+        this.friend.filter((value) => value.user_id === this.room.user_id)[0]
       )
     },
     clearChat() {

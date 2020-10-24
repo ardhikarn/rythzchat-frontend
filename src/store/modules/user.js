@@ -18,10 +18,7 @@ export default {
             payload.form
           )
           .then(response => resolve(response.data))
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .catch(error => reject(error.response))
       })
     },
     patchUser(context, payload) {
@@ -32,10 +29,7 @@ export default {
             payload.form
           )
           .then(response => resolve(response.data))
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .catch(error => reject(error.response))
       })
     },
     patchMaps(context, payload) {
@@ -45,13 +39,8 @@ export default {
             `${process.env.VUE_APP_BASE_URL}/user/maps/${payload.id}`,
             payload.form
           )
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .then(response => resolve(response.data))
+          .catch(error => reject(error.response))
       })
     },
     getUserByEmail(context, payload) {
@@ -62,10 +51,7 @@ export default {
             context.commit('setSearch', response.data.data[0])
             resolve(response.data)
           })
-          .catch(error => {
-            console.log(error)
-            reject(error.response)
-          })
+          .catch(error => reject(error.response))
       })
     }
   },

@@ -216,11 +216,11 @@ export default {
     this.getRoomByUserId(this.user.user_id)
   },
   mounted() {
-    this.socket.on('chatMsg', data => {
+    this.socket.on('chatMsg', (data) => {
       this.pushMessage(data)
       this.getRoomByUserId(this.user.user_id)
     })
-    this.socket.on('notify', data => {
+    this.socket.on('notify', (data) => {
       if (data.user === this.user.user_id) {
         this.makeToast('info', data.name, data.message)
       }
@@ -270,19 +270,18 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
-        .then(value => {
+        .then((value) => {
           this.isDelete = value
           if (this.isDelete === true) {
             const payload = {
               user_id: this.user.user_id,
               friend_id: data.user_id
             }
-            this.deleteFriend(payload).then(res => {
+            this.deleteFriend(payload).then((res) => {
               const payloadFriend = {
                 user_id: this.user.user_id,
                 search: this.search
               }
-              console.log(payloadFriend)
               this.getFriendById(payloadFriend)
               this.makeToast('success', 'Success', res.message)
             })
@@ -295,7 +294,7 @@ export default {
     },
     onChat(data) {
       this.setFriendProfile(data)
-      const check = this.rooms.some(value => {
+      const check = this.rooms.some((value) => {
         return value.user_id === data.user_id
       })
       if (check) {
@@ -305,8 +304,7 @@ export default {
           user_id: this.user.user_id,
           friend_id: data.user_id
         }
-        console.log(payload)
-        this.createRoom(payload).then(res => {
+        this.createRoom(payload).then((res) => {
           this.makeToast('success', 'Success', res.message)
           this.getRoomByUserId(this.user.user_id)
           this.$bvModal.hide('friend-list')
@@ -332,7 +330,7 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
-        .then(value => {
+        .then((value) => {
           this.isLogout = value
           this.isLogout ? this.logout() : console.log(value)
           // if (this.isLogout) {
