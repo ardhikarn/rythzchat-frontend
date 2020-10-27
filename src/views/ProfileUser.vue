@@ -12,8 +12,11 @@
           >
             Complete your Profile please.
           </b-alert>
-          <b-avatar size="12rem" class="mt-3">
-            <b-img :src="url + '/' + user.user_image" fluid></b-img>
+          <b-avatar
+            size="10rem"
+            class="mt-3"
+            :src="url + '/' + user.user_image"
+          >
           </b-avatar>
           <div class="edit-image mt-2 mb-4 text-muted">
             <b-icon icon="pencil" scale="0.9"></b-icon>
@@ -148,12 +151,12 @@ export default {
         form: this.form
       }
       this.patchUser(payload)
-        .then(response => {
+        .then((response) => {
           this.getUserById(this.user.user_id)
           this.makeToast('success', 'Success', response.message)
           this.$bvModal.hide('edit-profile')
         })
-        .catch(error => {
+        .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },
@@ -166,13 +169,13 @@ export default {
         form: data
       }
       this.patchImageUser(payload)
-        .then(response => {
+        .then((response) => {
           console.log(response)
           this.formImage = {}
           this.getUserById(this.user.user_id)
           this.makeToast('success', 'Success', 'Image Updated')
         })
-        .catch(error => {
+        .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },

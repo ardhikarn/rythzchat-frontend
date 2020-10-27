@@ -17,10 +17,13 @@
         </p>
       </b-col>
     </b-row>
-    <div v-if="found" class="mt-2">
+    <div v-if="found" class="mt-3">
       <b-row>
         <b-col cols="2" class="align-self-center text-center">
-          <b-img fluid :src="url + '/' + searchData.user_image"></b-img>
+          <b-avatar
+            :src="url + '/' + searchData.user_image"
+            class="no-image"
+          ></b-avatar>
         </b-col>
         <b-col cols="6" class="align-self-center">
           <p class="mb-0">{{ searchData.user_name }}</p>
@@ -70,7 +73,7 @@ export default {
       this.notFound = false
       this.found = false
       this.getUserByEmail(this.search)
-        .then(response => {
+        .then((response) => {
           if (response.data.length === 0) {
             this.notFound = true
             this.found = false
@@ -78,7 +81,7 @@ export default {
             this.found = true
             this.notFound = false
             const check = this.friend.some(
-              el => el.user_id === this.searchData.user_id
+              (el) => el.user_id === this.searchData.user_id
             )
             if (this.user.user_id === this.searchData.user_id) {
               this.notInvited = false
@@ -92,7 +95,7 @@ export default {
             }
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     },
@@ -101,7 +104,7 @@ export default {
         user_id: this.user.user_id,
         friend_id: this.searchData.user_id
       }
-      this.addFriend(payload).then(response => {
+      this.addFriend(payload).then((response) => {
         const payloadContact = {
           user_id: this.user.user_id,
           search: ''

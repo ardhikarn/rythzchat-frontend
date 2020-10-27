@@ -108,20 +108,10 @@ export default {
       })
     },
     logout(context, payload) {
-      return new Promise((resolve, reject) => {
-        axios
-          .patch(`${process.env.VUE_APP_BASE_URL}/user/activity/${payload}`)
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error.response)
-          })
-        localStorage.removeItem('token')
-        sessionStorage.clear()
-        context.commit('delUser')
-        router.push('/login')
-      })
+      localStorage.removeItem('token')
+      sessionStorage.clear()
+      context.commit('delUser')
+      router.push('/login')
     },
     interceptorRequest(context) {
       axios.interceptors.request.use(

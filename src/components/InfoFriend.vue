@@ -1,13 +1,12 @@
 <template>
   <b-sidebar id="info-friend" right shadow backdrop width="455px">
     <div class="text-center mb-4">
-      <b-img
-        style="width: 10rem"
-        fluid
-        class="rounded-pill"
-        thumbnail
+      <b-avatar
+        size="11rem"
+        class="mb-1"
         :src="url + '/' + infoFriend.user_image"
-      ></b-img>
+      >
+      </b-avatar>
       <h4 class="text-lowercase">{{ infoFriend.user_name }}</h4>
     </div>
     <b-container class="side-profile">

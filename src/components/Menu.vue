@@ -108,11 +108,9 @@
           ></b-form-input>
         </b-col>
       </b-row>
-      <b-row v-if="friendlist.length === 0" class="mt-2">
-        <b-col cols="12">
-          <small>Friend not Found</small>
-        </b-col>
-      </b-row>
+      <div v-if="friendlist.length === 0" class="mt-2">
+        <div><small>Friend not Found</small></div>
+      </div>
 
       <div
         v-else-if="friendlist.length > 0"
@@ -231,8 +229,7 @@ export default {
       user: 'getUser',
       friendlist: 'getFriendlist',
       rooms: 'getRoom',
-      chat: 'getMessage',
-      groupRooms: 'getGroupRooms'
+      chat: 'getMessage'
     }),
     currentRouteName() {
       return this.$route.name
@@ -246,7 +243,8 @@ export default {
       'createRoom',
       'getRoomByUserId',
       'getMessageByRoomId',
-      'logout'
+      'logout',
+      'patchActivity'
     ]),
     ...mapMutations([
       'setFriendProfile',
@@ -293,7 +291,6 @@ export default {
       this.$bvModal.hide('friend-list')
     },
     onChat(data) {
-      this.setFriendProfile(data)
       const check = this.rooms.some((value) => {
         return value.user_id === data.user_id
       })
@@ -332,11 +329,19 @@ export default {
         })
         .then((value) => {
           this.isLogout = value
-          this.isLogout ? this.logout() : console.log(value)
-          // if (this.isLogout) {
-          //   this.socket.emit('offline', this.user.user_id)
-          //   this.logout(this.user.user_id)
-          // }
+          if (this.isLogout) {
+            const patchActive = {
+              id: this.user.user_id,
+              form: {
+                user_activity: 0,
+                user_updated_at: new Date()
+              }
+            }
+            this.patchActivity(patchActive).then((response) =>
+              this.getRoomByUserId(this.user.user_id)
+            )
+            this.logout(this.user.user_id)
+          }
         })
     }
   }

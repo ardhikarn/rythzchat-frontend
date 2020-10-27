@@ -53,6 +53,17 @@ export default {
           })
           .catch(error => reject(error.response))
       })
+    },
+    patchActivity(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .patch(
+            `${process.env.VUE_APP_BASE_URL}/user/activity/${payload.id}`,
+            payload.form
+          )
+          .then(response => resolve(response.data))
+          .catch(error => reject(error.response))
+      })
     }
   },
   getters: {

@@ -15,7 +15,8 @@
             <p class="mb-0">
               <strong>{{ room.user_name }}</strong>
             </p>
-            <small class="mb-0">Online</small>
+            <small class="mb-0" v-if="room.user_activity === 0">Offline</small>
+            <small class="mb-0" v-if="room.user_activity === 1">Online</small>
           </div>
         </div>
         <button class="btn" v-b-toggle.info-friend @click="onDetail()">
@@ -118,7 +119,12 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['getMessageByRoomId', 'sendMessage', 'getRoomByUserId']),
+    ...mapActions([
+      'getMessageByRoomId',
+      'sendMessage',
+      'getRoomByUserId',
+      'logout'
+    ]),
     ...mapMutations(['setSelect', 'setFriendProfile']),
     scrollToEnd() {
       const container = this.$el.querySelector('#chat-c')

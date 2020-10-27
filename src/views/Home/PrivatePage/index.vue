@@ -80,12 +80,6 @@ export default {
       this.pushMessage(data)
       this.getRoomByUserId(this.user.user_id)
     })
-
-    // this.socket.on('notify', (data) => {
-    //   if (data.user === this.user.user_id) {
-    //     this.makeToast('info', data.name, data.message)
-    //   }
-    // })
   },
   created() {
     this.getRoomByUserId(this.user.user_id)
@@ -94,7 +88,7 @@ export default {
     ...mapGetters({ rooms: 'getRoom', user: 'getUser' })
   },
   methods: {
-    ...mapActions(['getMessageByRoomId', 'getRoomByUserId']),
+    ...mapActions(['getMessageByRoomId', 'getRoomByUserId', 'logout']),
     ...mapMutations(['setSelect', 'setSelectedRoom', 'pushMessage']),
     onSelect(data) {
       this.getRoomByUserId(this.user.user_id)

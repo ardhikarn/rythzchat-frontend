@@ -19,6 +19,7 @@
 import EmptyRoom from '@/components/EmptyRoom.vue'
 import ChatRoom from '@/components/ChatRoom.vue'
 import Menu from '@/components/Menu.vue'
+import io from 'socket.io-client'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -32,6 +33,7 @@ export default {
     return {
       page: 1,
       messages: [],
+      socket: io(process.env.VUE_APP_BASE_URL),
       infiniteId: +new Date()
     }
   },

@@ -1,13 +1,8 @@
 <template>
   <b-sidebar id="sidebar-profile" shadow backdrop width="455px">
-    <div class="text-center mb-4">
-      <b-img
-        style="width: 10rem"
-        fluid
-        class="rounded-pill"
-        thumbnail
-        :src="url + '/' + user.user_image"
-      ></b-img>
+    <div class="text-center mb-3">
+      <b-avatar size="11rem" class="mb-1" :src="url + '/' + user.user_image">
+      </b-avatar>
       <h4 class="text-lowercase">@{{ user.user_name.split(' ')[0] }}</h4>
     </div>
     <b-container class="side-profile">
@@ -91,7 +86,7 @@ export default {
   },
   created() {
     this.$getLocation()
-      .then(coordinates => {
+      .then((coordinates) => {
         this.coordinate = {
           lat: coordinates.lat,
           lng: coordinates.lng
@@ -104,11 +99,11 @@ export default {
             user_updated_at: new Date()
           }
         }
-        this.patchMaps(payload).then(response => {
+        this.patchMaps(payload).then((response) => {
           this.getUserById(this.user.user_id)
         })
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error)
       })
   },

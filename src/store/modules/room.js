@@ -46,7 +46,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get(
-            `${process.env.VUE_APP_BASE_URL}/room/search/?id=${payload.id}&search=${payload.search}`
+            `${process.env.VUE_APP_BASE_URL}/room/search?id=${payload.id}&search=${payload.search}`
           )
           .then(response => {
             context.commit('setRoom', response.data.data)

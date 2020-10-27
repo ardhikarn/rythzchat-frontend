@@ -144,10 +144,10 @@ export default {
     ...mapGetters(['getLoading'])
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'patchActivity']),
     onSubmit() {
       this.login(this.form)
-        .then(result => {
+        .then((result) => {
           this.makeToast('success', 'Success', result.message)
           setTimeout(() => {
             if (
@@ -158,11 +158,19 @@ export default {
             ) {
               this.$router.push('/profile-user')
             } else {
+              const patchActive = {
+                id: result.data.user_id,
+                form: {
+                  user_activity: 1,
+                  user_updated_at: new Date()
+                }
+              }
+              this.patchActivity(patchActive)
               this.$router.push('/home')
             }
           }, 1500)
         })
-        .catch(error => {
+        .catch((error) => {
           this.makeToast('danger', 'Error', error.data.message)
         })
     },
